@@ -46,19 +46,19 @@ When finally Onboarding, Restaurant owners have the option of enhancing their li
 
 | S/N 	| Method 	| Route 	| Function 	|
 |-	|-	|-	|-	|
-| 1 	| GET 	| api/v1/auth/ 	| Index page of the website 	|
-| 2 	| POST 	| api/v1/auth/restaurant 	| Creates new restaurant 	|
-| 3 	| GET 	| api/v1/auth/restaurant 	| Displays all restaurant 	|
-| 4 	| GET 	| api/v1/auth/restaurant/:Id 	| Gets a single restaurant 	|
-| 5 	| PUT 	| api/v1/auth/restaurant/:Id 	| Updates a restaurant 	|
-| 6 	| DELETE 	| api/v1/auth/restaurant/:Id 	| Deletes a restaurant 	|
-| 7 	| PUT   | api/v1/auth/restaurant/restaurantId/photo 	| Upload restaurant photo 	|
-| 8 	| GET 	| api/v1/auth/restaurant/radius/:zipcode/:distance 	| Get a restaurant in a location using zipCode and  	|
-| 9 	| GET 	| api/v1/auth/menu/ 	| Gets all Menu in the restaurant 	|
-| 10 	| POST 	| /api/v1/auth/restaurant/restaurantId/menu 	| Create a Menu in the restaurant 	|
-| 11 	| GET 	| api/v1/auth/restaurant/restaurantId/menu 	| Gets all Menu associated to a single restaurant 	|
-| 12 	| GET 	| api/v1/auth/menu 	| This gets all menu in the database 	|
-| 13 	| GET 	| /menu/:id 	| Gets a single menu 	|
-| 14 	| PUT 	| api/v1/auth/menu/:id 	| Updates a single menu 	|
-| 15 	| DELETE 	| api/v1/auth/menu/:id 	| Deletes a single menu 	|
-| 16 	| PUT 	| api/v1/auth/menu/menuId/photo 	| Upload multiple menu photo 	|
+| [ ]	| GET 	| api/v1/auth/ 	| Index page of the website 	|
+| [x]	| POST 	| api/v1/auth/restaurant 	| Creates new restaurant 	|
+| [x]	| GET 	| api/v1/auth/restaurant 	| Displays all restaurant 	|
+| [x]	| GET 	| api/v1/auth/restaurant/:Id 	| Gets a single restaurant 	|
+| [x]	| PUT 	| api/v1/auth/restaurant/:Id 	| Updates a restaurant 	|
+| [x]	| DELETE 	| api/v1/auth/restaurant/:Id 	| Deletes a restaurant 	|
+| [x]	| PUT   | api/v1/auth/restaurant/restaurantId/photo 	| Upload restaurant photo 	|
+| [ ]	| GET 	| api/v1/auth/restaurant/radius/:zipcode/:distance 	| Get a restaurant in a location using zipCode and  	|
+| [x]	| GET 	| api/v1/auth/menu/ 	| Gets all Menu in the restaurant 	|
+| [x]	| POST 	| /api/v1/auth/restaurant/restaurantId/menu 	| Create a Menu in the restaurant 	|
+| [x]	| GET 	| api/v1/auth/restaurant/restaurantId/menu 	| Gets all Menu associated to a single restaurant 	|
+| [x]	| GET 	| api/v1/auth/menu 	| This gets all menu in the database 	|
+| [x]	| GET 	| /menu/:id 	| Gets a single menu 	|
+| [x]	| PUT 	| api/v1/auth/menu/:id 	| Updates a single menu 	|
+| [x]	| DELETE 	| api/v1/auth/menu/:id 	| Deletes a single menu 	|
+| [ ]	| PUT 	| api/v1/auth/menu/menuId/photo 	| Upload multiple menu photo 	|
