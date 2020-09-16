@@ -1,4 +1,6 @@
 const Restaurant = require("../models/restaurantModel");
+const Menu = require("../models/menuModel");
+
 const asyncHandler = require("../middleware/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
 const path = require("path");
@@ -16,20 +18,27 @@ exports.createRestaurant = asyncHandler(async (req, res, next) => {
 
 exports.getRestaurants = asyncHandler(async (req, res, next) => {
   let query;
-  const queryReq = { ...req.query };
+  let queryReq = { ...req.query };
 
-  const ignoreField = ["select"];
+  // console.log(queryReq);
+  // Ignore fields from req.query
+  const ignoreField = ["select", "q"];
+
   // Loop through params
   ignoreField.forEach((param) => delete queryReq[param]);
-  let queryStr = JSON.stringify(queryReq);
-  queryStr = queryStr.replace(/\b(in)\b/g);
 
-  query = Restaurant.find(JSON.parse(queryStr));
-  if (req.query.select) {
-    const field = req.query.select.split(",").join(" ");
-    console.log(field);
-    query = query.select(field);
-  }
+  let queryStr = JSON.stringify(queryReq);
+
+  queryStr = queryStr.replace(
+    /\b(gt|gte|lt|lte|in)\b/g,
+    (match) => `$${match}`
+  );
+  // ₦
+
+  query = Restaurant.find(JSON.parse(queryStr)).populate({
+    path: "menu",
+  });
+
   const restaurant = await query;
   res.json({
     success: true,

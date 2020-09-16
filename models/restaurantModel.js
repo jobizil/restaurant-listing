@@ -26,6 +26,10 @@ const RestaurantSchema = new mongoose.Schema(
       default: "myrestaurant@gmail.com",
       unique: true,
     },
+    parkingLot: {
+      type: Boolean,
+      default: false,
+    },
     address: {
       type: String,
       trim: true,
@@ -56,6 +60,10 @@ const RestaurantSchema = new mongoose.Schema(
       type: String,
       default: "default.jpg",
     },
+    // menu: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Menu",
+    // },
     restaurantType: {
       type: String,
       enum: ["Eatry", "Bukka", "Canteen"],
@@ -64,33 +72,25 @@ const RestaurantSchema = new mongoose.Schema(
     slug: String,
     direction: String,
   },
-  { timestamps: true }
+  { timestamps: true },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
 
+// Reverse Populate with virtuals
+RestaurantSchema.virtual("menu", {
+  ref: "Menu",
+  localField: "_id",
+  foreignField: "restaurant",
+  justOne: false,
+});
 // Convert name to slug for front end consumption
 RestaurantSchema.pre("save", function (next) {
   this.slug = slugify(this.businessName, { lower: true });
   next();
 });
-/**
-// Get GeoJSON Location of address
-RestaurantSchema.pre("save", async function (next) {
-  let loc = await geocoder.geocode(this.address); //Returns an array
-  let result = loc[0];
-  this.location = {
-    type: "Point",
-    coordinates: [result.longitude, result.latitude],
-    formattedAddress: result.formattedAddress,
-    street: result.streetName,
-    city: result.city,
-    state: result.state,
-    country: result.country,
-  };
-  this.address = undefined;
-
-  next();
-});
-*/
 
 const Restaurant = mongoose.model("Restaurant", RestaurantSchema);
 

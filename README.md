@@ -44,13 +44,6 @@ When finally Onboarding, Restaurant owners have the option of enhancing their li
 
 ## ROUTES / ENDPOINTS
 
-| Method |         Route          |                  Function |
-| :----- | :--------------------: | ------------------------: |
-| GET    |      api/v1/auth/      | Index page of the website |
-| POST   | api/v1/auth/restaurant |    Creates new restaurant |
-| GET    | api/v1/auth/restaurant |   Displays all restaurant |
-
-
 | S/N 	| Method 	| Route 	| Function 	|
 |-	|-	|-	|-	|
 | 1 	| GET 	| api/v1/auth/ 	| Index page of the website 	|

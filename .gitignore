@@ -4,3 +4,31 @@ Mock Data
 _mockData
 seeders.js
 public
+
+
+
+
+
+
+
+
+
+
+
+// Get GeoJSON Location of address
+// RestaurantSchema.pre("save", async function (next) {
+//   let loc = await geocoder.geocode(this.address); //Returns an array
+//   let result = loc[0];
+//   this.location = {
+//     type: "Point",
+//     coordinates: [result.longitude, result.latitude],
+//     formattedAddress: result.formattedAddress,
+//     street: result.streetName,
+//     city: result.city,
+//     state: result.state,
+//     country: result.country,
+//   };
+//   // this.address = undefined;
+//
+//   next();
+// });
