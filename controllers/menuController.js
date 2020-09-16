@@ -39,13 +39,18 @@ exports.getAllMenu = asyncHandler(async (req, res, next) => {
   let query;
 
   if (_restaurantId) {
-    query = Menu.find({ restaurant: _restaurantId });
+    query = Menu.find({
+      restaurant: _restaurantId
+    });
   } else {
     query = Menu.find().populate("restaurant");
   }
 
   const menu = await query;
-  res.status(200).json({ "Total Found": menu.length, Result: menu });
+  res.status(200).json({
+    "Total Found": menu.length,
+    Result: menu
+  });
 });
 
 // ============
@@ -56,11 +61,16 @@ exports.getAllMenu = asyncHandler(async (req, res, next) => {
 
 exports.getMenu = asyncHandler(async (req, res, next) => {
   const _id = req.params.id;
-  const menu = await Menu.findById(_id).populate("restaurant");
+  const menu = await Menu.findById(_id).populate({
+    path: "restaurant",
+    select: 'businessName email restaurantType address'
+  });
   if (!menu) {
     return next(new ErrorResponse(`No menu with Id ${_id} found`, 404));
   }
-  res.status(200).json({ Result: menu });
+  res.status(200).json({
+    Result: menu
+  });
 });
 
 // ============

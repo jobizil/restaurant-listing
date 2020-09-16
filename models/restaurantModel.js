@@ -3,8 +3,7 @@ const slugify = require("slugify");
 
 const geocoder = require("../utils/geocoder");
 
-const RestaurantSchema = new mongoose.Schema(
-  {
+const RestaurantSchema = new mongoose.Schema({
     businessName: {
       type: String,
       required: [true, "Please input a restaurant name."],
@@ -19,6 +18,7 @@ const RestaurantSchema = new mongoose.Schema(
     },
     email: {
       type: String,
+      lowercase: true,
       match: [
         /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         "Please add a valid email",
@@ -71,12 +71,17 @@ const RestaurantSchema = new mongoose.Schema(
     },
     slug: String,
     direction: String,
+  }, {
+    timestamps: true
   },
-  { timestamps: true },
-  {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
-  }
+  // {
+  //   toJSON: {
+  //     virtuals: true
+  //   },
+  //   toObject: {
+  //     virtuals: true
+  // },
+  // }
 );
 
 // Reverse Populate with virtuals
@@ -88,7 +93,9 @@ RestaurantSchema.virtual("menu", {
 });
 // Convert name to slug for front end consumption
 RestaurantSchema.pre("save", function (next) {
-  this.slug = slugify(this.businessName, { lower: true });
+  this.slug = slugify(this.businessName, {
+    lower: true
+  });
   next();
 });
 
