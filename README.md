@@ -44,10 +44,10 @@ When finally Onboarding, Restaurant owners have the option of enhancing their li
 
 ## ROUTES / ENDPOINTS
 
-| S/N 	| Method 	| Route 	| Function 	|
+| T/L 	| Method 	| Route 	| Function 	|
 |-	|-	|-	|-	|
-| [ ]	| GET 	| api/v1/auth/ 	| Index page of the website 	|
-| [x]	| POST 	| api/v1/auth/restaurant 	| Creates new restaurant 	|
+| - [ ]	| GET 	| api/v1/auth/ 	| Index page of the website 	|
+| - [x]	| POST 	| api/v1/auth/restaurant 	| Creates new restaurant 	|
 | [x]	| GET 	| api/v1/auth/restaurant 	| Displays all restaurant 	|
 | [x]	| GET 	| api/v1/auth/restaurant/:Id 	| Gets a single restaurant 	|
 | [x]	| PUT 	| api/v1/auth/restaurant/:Id 	| Updates a restaurant 	|
@@ -62,3 +62,8 @@ When finally Onboarding, Restaurant owners have the option of enhancing their li
 | [x]	| PUT 	| api/v1/auth/menu/:id 	| Updates a single menu 	|
 | [x]	| DELETE 	| api/v1/auth/menu/:id 	| Deletes a single menu 	|
 | [ ]	| PUT 	| api/v1/auth/menu/menuId/photo 	| Upload multiple menu photo 	|
+
+
+T/L=>Task Lists
+	- [x] Completed task item
+    - [ ] Unfinished task item
