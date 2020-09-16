@@ -7,7 +7,7 @@ A platform that lists out locations of Restaurants around for users and also tel
 - Admin: Website Owners or anybody with authorized access.
 - User: public users.
 
-### Restaurant Directory | About Us
+## Restaurant Directory | About Us
 
 This project aims to specialize in providing users a complete and accurate electronic listing of Restaurants located throughout Lagos State and possibly Nigeria.
 By utilizing a Smart Search Technology, users searching for Restaurants and Dining locations, will have the ability to search for restaurants by City or State and by other various search methods including proximity.
@@ -22,9 +22,9 @@ Restaurant owners are provided free business listings.
 
 When finally Onboarding, Restaurant owners have the option of enhancing their listing by adding special services available only to Registered Restaurant Owners.
 
-### DATABASE MODELS
+## DATABASE MODELS
 
-#### RESTAURANTS
+### RESTAURANTS
 
 - businessName,
 - website,
@@ -35,9 +35,17 @@ When finally Onboarding, Restaurant owners have the option of enhancing their li
 - averageCost,
 - restaurantType
 
-#### MENU
+### MENU
 
 - menuName,
 - description,
 - price,
 - restaurant
+
+## ROUTES / ENDPOINTS
+
+| Method |         Route          |                  Function |
+| :----- | :--------------------: | ------------------------: |
+| GET    |      api/v1/auth/      | Index page of the website |
+| POST   | api/v1/auth/restaurant |    Creates new restaurant |
+| GET    | api/v1/auth/restaurant |   Displays all restaurant |
