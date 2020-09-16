@@ -1,6 +1,6 @@
 # Restaurant Listing App
 
-A platform that lists out locations of Restaurants around for users and also tells what type of restaurant it is (Canteen, Bukka or an Eatry). It also helps in giving directions on how to get there ahd hepls users identify the feel of the environment.
+A platform that lists out locations of Restaurants around for users and also tells what type of restaurant it is (Canteen, Bukka or an Eatery). It also helps in giving directions on how to get there and helps users identify the feel of the environment.
 
 ### User Types
 
@@ -9,8 +9,8 @@ A platform that lists out locations of Restaurants around for users and also tel
 
 ### Restaurant Directory | About Us
 
-This project aims to specialize in providing consumers a complete and accurate electronic listing of Restaurants located throughout Lagos State and possibly Nigeria.
-By utilizing a Smart Search Technology, consumers searching for Restaurants and Dining locations, now have the ability to search for restaurants by City or State and by other various search methods including proximity.
+This project aims to specialize in providing users a complete and accurate electronic listing of Restaurants located throughout Lagos State and possibly Nigeria.
+By utilizing a Smart Search Technology, users searching for Restaurants and Dining locations, will have the ability to search for restaurants by City or State and by other various search methods including proximity.
 
 When users finally find a restaurant that interests them, they can easily get more information of that restaurant like directions on how to get to the location, or read reviews from that restaurant and also have an idea of the average meal cost.
 
