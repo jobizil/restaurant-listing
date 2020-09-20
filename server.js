@@ -9,6 +9,7 @@ dotenv.config({ path: "./config/config.env" });
 const connectDB = require("./config/dbConfig");
 const auth = require("./routes/authRouter");
 const menu = require("./routes/menuRouter");
+const image = require("./routes/imageRouter");
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
@@ -28,6 +29,7 @@ connectDB();
 // Add Router
 app.use("/api/v1/auth/restaurant", auth);
 app.use("/api/v1/auth/menu", menu);
+app.use("/api/v1/auth/menu", image);
 
 app.use(errorHandler);
 

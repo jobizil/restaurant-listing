@@ -3,7 +3,8 @@ const slugify = require("slugify");
 
 const geocoder = require("../utils/geocoder");
 
-const RestaurantSchema = new mongoose.Schema({
+const RestaurantSchema = new mongoose.Schema(
+  {
     businessName: {
       type: String,
       required: [true, "Please input a restaurant name."],
@@ -18,12 +19,12 @@ const RestaurantSchema = new mongoose.Schema({
     },
     email: {
       type: String,
+      trim: true,
       lowercase: true,
       match: [
         /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         "Please add a valid email",
       ],
-      default: "myrestaurant@gmail.com",
       unique: true,
     },
     parkingLot: {
@@ -71,9 +72,10 @@ const RestaurantSchema = new mongoose.Schema({
     },
     slug: String,
     direction: String,
-  }, {
-    timestamps: true
   },
+  {
+    timestamps: true,
+  }
   // {
   //   toJSON: {
   //     virtuals: true
@@ -91,11 +93,19 @@ RestaurantSchema.virtual("menu", {
   foreignField: "restaurant",
   justOne: false,
 });
-// Convert name to slug for front end consumption
+
+// Convert name to slug for frontend consumption
 RestaurantSchema.pre("save", function (next) {
   this.slug = slugify(this.businessName, {
-    lower: true
+    lower: true,
   });
+  next();
+});
+// Generate Unique email through businessName
+RestaurantSchema.pre("save", function (next) {
+  if (!this.email) {
+    this.email = `${this.slug}@gmail.com`;
+  }
   next();
 });
 

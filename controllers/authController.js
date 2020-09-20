@@ -1,9 +1,10 @@
+const path = require("path");
+
 const Restaurant = require("../models/restaurantModel");
 const Menu = require("../models/menuModel");
-
 const asyncHandler = require("../middleware/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
-const path = require("path");
+
 
 // @desc        Create a Restaurant
 // @routes      GET /api/v1/auth
@@ -18,7 +19,9 @@ exports.createRestaurant = asyncHandler(async (req, res, next) => {
 
 exports.getRestaurants = asyncHandler(async (req, res, next) => {
   let query;
-  let queryReq = { ...req.query };
+  let queryReq = {
+    ...req.query,
+  };
 
   // console.log(queryReq);
   // Ignore fields from req.query
@@ -59,7 +62,10 @@ exports.getRestaurant = asyncHandler(async (req, res, next) => {
       new ErrorResponse(`Sorry, the Id ${_id} could not be fetched.`, 404)
     );
   }
-  return res.json({ success: true, data: restaurant });
+  return res.json({
+    success: true,
+    data: restaurant,
+  });
 });
 
 // ========================
@@ -74,7 +80,10 @@ exports.updateRestaurant = asyncHandler(async (req, res, next) => {
   if (!restaurant) {
     return next(new ErrorResponse(`Restaurant with Id ${_id} not found.`), 404);
   }
-  res.status(200).json({ success: true, data: restaurant });
+  res.status(200).json({
+    success: true,
+    data: restaurant,
+  });
 });
 
 // =================================
@@ -84,7 +93,10 @@ exports.deleteRestaurant = asyncHandler(async (req, res, next) => {
   if (!restaurant) {
     return next(new ErrorResponse(`Restaurant with Id ${_id} not found.`, 404));
   }
-  res.status(200).json({ success: true, data: {} });
+  res.status(200).json({
+    success: true,
+    data: {},
+  });
 });
 
 // @desc        Upload photo
@@ -117,16 +129,21 @@ exports.uploadRestaurantPhoto = asyncHandler(async (req, res, next) => {
   file.name = `photo_${restaurant.slug}${path.parse(file.name).ext}`;
 
   // Store in path folder
-  file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err) => {
-    if (err) {
-      console.log(err);
-      return next(new ErrorResponse("Could not upload file", 500));
+  file.mv(
+    `${process.env.FILE_UPLOAD_PATH}/restaurant/${file.name}`,
+    async (err) => {
+      if (err) {
+        console.log(err);
+        return next(new ErrorResponse("Could not upload file", 500));
+      }
+      // Insert in DB
+      await Restaurant.findByIdAndUpdate(_id, {
+        photo: file.name,
+      });
+      res.status(200).json({
+        success: true,
+        data: file.name,
+      });
     }
-    // Insert in DB
-    await Restaurant.findByIdAndUpdate(_id, { photo: file.name });
-    res.status(200).json({
-      success: true,
-      data: file.name,
-    });
-  });
+  );
 });
