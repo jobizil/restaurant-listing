@@ -1,7 +1,6 @@
 const path = require("path");
-
 const Restaurant = require("../models/restaurantModel");
-const Menu = require("../models/menuModel");
+// const Menu = require("../models/menuModel");
 const asyncHandler = require("../middleware/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
 
@@ -125,25 +124,31 @@ exports.uploadRestaurantPhoto = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse(`Sorry, file is bigger than 2mb`, 400));
   }
 
-  // Customise file name
-  file.name = `photo_${restaurant.slug}${path.parse(file.name).ext}`;
+  //Generate random date and Pick last 3 digits of tiimestamp generated
+  let today = new Date();
+  today = Date.now().toString().slice(-3)
+  let rand = Math.floor(Math.random() * 10000)
 
+  console.log(file.data)
+  // Customise file name
+  file.name = `restaurant_${rand}${today}${path.parse(file.name).ext}`;
   // Store in path folder
-  file.mv(
-    `${process.env.FILE_UPLOAD_PATH}/restaurant/${file.name}`,
-    async (err) => {
-      if (err) {
-        console.log(err);
-        return next(new ErrorResponse("Could not upload file", 500));
-      }
-      // Insert in DB
-      await Restaurant.findByIdAndUpdate(_id, {
-        photo: file.name,
-      });
-      res.status(200).json({
-        success: true,
-        data: file.name,
-      });
-    }
-  );
+  // file.mv(
+  //   `${process.env.FILE_UPLOAD_PATH}/restaurant/${file.name}`,
+  //   async (err) => {
+  //     if (err) {
+  //       console.log(err);
+  //       return next(new ErrorResponse("Could not upload file", 500));
+  //     }
+  //   })
+  // Insert in DB
+  await Restaurant.findByIdAndUpdate(_id, {
+    photo: file.data,
+  });
+  res.status(200).json({
+    success: true,
+    data: file.name,
+  });
+
+
 });
