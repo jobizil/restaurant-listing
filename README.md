@@ -53,15 +53,13 @@ When finally Onboarding, Restaurant owners have the option of enhancing their li
 | [x]	| PUT 	| api/v1/auth/restaurant/:Id 	| Updates a restaurant 	|
 | [x]	| DELETE 	| api/v1/auth/restaurant/:Id 	| Deletes a restaurant 	|
 | [x]	| PUT   | api/v1/auth/restaurant/restaurantId/photo 	| Upload restaurant photo 	|
-| [ ]	| GET 	| api/v1/auth/restaurant/radius/:zipcode/:distance 	| Get a restaurant in a location using zipCode and  	|
-| [x]	| GET 	| api/v1/auth/menu/ 	| Gets all Menu in the restaurant 	|
 | [x]	| POST 	| /api/v1/auth/restaurant/restaurantId/menu 	| Create a Menu in the restaurant 	|
 | [x]	| GET 	| api/v1/auth/restaurant/restaurantId/menu 	| Gets all Menu associated to a single restaurant 	|
 | [x]	| GET 	| api/v1/auth/menu 	| This gets all menu in the database 	|
 | [x]	| GET 	| /menu/:id 	| Gets a single menu 	|
 | [x]	| PUT 	| api/v1/auth/menu/:id 	| Updates a single menu 	|
 | [x]	| DELETE 	| api/v1/auth/menu/:id 	| Deletes a single menu 	|
-| [ ]	| PUT 	| api/v1/auth/menu/menuId/photo 	| Upload multiple menu photo 	|
+| [ ]	| POST 	| api/v1/auth/menu/menuId/photo 	| Upload multiple menu photo 	|
 
 
 #### T/L=>Task Lists
