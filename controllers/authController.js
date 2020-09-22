@@ -21,7 +21,7 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
 
   // Exclude fields when being matched for filtering
 
-  ignoreFields = ["select"];
+  ignoreFields = ["select", "sort"];
   // Loop through ignoreFields on reqQuery and delete
   ignoreFields.forEach((param) => delete reqQuery[param]);
 
