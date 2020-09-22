@@ -43,7 +43,15 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
   if (req.query.select) {
     const fields = req.query.select.split(",").join(" ");
     query = query.select(fields);
-    console.log(fields);
+  }
+
+  // Sort field's value
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(",").join(" ");
+    query = query.sort(sortBy);
+    console.log(sortBy);
+  } else {
+    query = query.sort("-reviews");
   }
 
   const restaurant = await query;

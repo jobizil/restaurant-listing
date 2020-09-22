@@ -28,6 +28,10 @@ const RestaurantSchema = new mongoose.Schema(
       ],
       unique: true,
     },
+    reviews: {
+      type: Number,
+      default: 10,
+    },
     parkinglot: {
       type: Boolean,
 
