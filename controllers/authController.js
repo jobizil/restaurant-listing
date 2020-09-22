@@ -17,22 +17,40 @@ exports.createRestaurant = asyncHandler(async (req, res, next) => {
 
 exports.getRestaurants = asyncHandler(async (req, res, next) => {
   let query;
+  const reqQuery = { ...req.query };
 
-  let queryString = JSON.stringify(req.query);
-  // Set up a regex
+  // Exclude fields when being matched for filtering
+
+  ignoreFields = ["select"];
+  // Loop through ignoreFields on reqQuery and delete
+  ignoreFields.forEach((param) => delete reqQuery[param]);
+
+  // Convert json into string
+  let queryString = JSON.stringify(reqQuery);
+
+  // Set up a regex for filtering of query params
   queryString = queryString.replace(
     /\b(lt|lte|gt|gte|in)\b/g,
     (match) => `$${match}`
   );
+
+  // Find resources in db
   query = Restaurant.find(JSON.parse(queryString)).populate({
     path: "menu",
   });
-  console.log(queryString);
+
+  // Select field's value
+  if (req.query.select) {
+    const fields = req.query.select.split(",").join(" ");
+    query = query.select(fields);
+    console.log(fields);
+  }
+
   const restaurant = await query;
   res.json({
     success: true,
-    count: restaurant.length,
-    data: restaurant,
+    "Total Found": restaurant.length,
+    Result: restaurant,
   });
 });
 
