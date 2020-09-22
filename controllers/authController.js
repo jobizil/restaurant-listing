@@ -4,7 +4,6 @@ const Restaurant = require("../models/restaurantModel");
 const asyncHandler = require("../middleware/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
 
-
 // @desc        Create a Restaurant
 // @routes      GET /api/v1/auth
 // @access      Public
@@ -18,29 +17,17 @@ exports.createRestaurant = asyncHandler(async (req, res, next) => {
 
 exports.getRestaurants = asyncHandler(async (req, res, next) => {
   let query;
-  let queryReq = {
-    ...req.query,
-  };
 
-  // console.log(queryReq);
-  // Ignore fields from req.query
-  const ignoreField = ["select", "q"];
-
-  // Loop through params
-  ignoreField.forEach((param) => delete queryReq[param]);
-
-  let queryStr = JSON.stringify(queryReq);
-
-  queryStr = queryStr.replace(
-    /\b(gt|gte|lt|lte|in)\b/g,
+  let queryString = JSON.stringify(req.query);
+  // Set up a regex
+  queryString = queryString.replace(
+    /\b(lt|lte|gt|gte|in)\b/g,
     (match) => `$${match}`
   );
-  // ₦
-
-  query = Restaurant.find(JSON.parse(queryStr)).populate({
+  query = Restaurant.find(JSON.parse(queryString)).populate({
     path: "menu",
   });
-
+  console.log(queryString);
   const restaurant = await query;
   res.json({
     success: true,
@@ -126,10 +113,10 @@ exports.uploadRestaurantPhoto = asyncHandler(async (req, res, next) => {
 
   //Generate random date and Pick last 3 digits of tiimestamp generated
   let today = new Date();
-  today = Date.now().toString().slice(-3)
-  let rand = Math.floor(Math.random() * 10000)
+  today = Date.now().toString().slice(-3);
+  let rand = Math.floor(Math.random() * 10000);
 
-  console.log(file.data)
+  console.log(file.data);
   // Customise file name
   file.name = `restaurant_${rand}${today}${path.parse(file.name).ext}`;
   // Store in path folder
@@ -149,6 +136,4 @@ exports.uploadRestaurantPhoto = asyncHandler(async (req, res, next) => {
     success: true,
     data: file.name,
   });
-
-
 });
