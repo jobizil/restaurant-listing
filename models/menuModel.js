@@ -1,38 +1,34 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
 
-const MenuSchema = new mongoose.Schema({
-  menuName: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  slug: String,
-  description: {
-    type: String,
-    trim: true,
-    required: [true, "Description is required."],
-    maxlength: [500, "Description should not be more than 500 Characters"],
-  },
-  price: {
-    type: Number,
-    required: true,
-    trim: true,
-    min: 0,
-    default: 0,
-  },
-  photo: {
-    type: Buffer,
+const MenuSchema = new mongoose.Schema(
+  {
+    menuName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    slug: String,
+    description: {
+      type: String,
+      trim: true,
+      required: [true, "Description is required."],
+      maxlength: [500, "Description should not be more than 500 Characters"],
+    },
 
+    photo: {
+      ContentType: String,
+      data: Buffer,
+    },
+    restaurant: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Restaurant",
+    },
   },
-  // photo: Buffer,
-  restaurant: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Restaurant",
-  },
-}, {
-  timestamps: true,
-});
+  {
+    timestamps: true,
+  }
+);
 
 // Convert name to slug for front end consumption
 MenuSchema.pre("save", function (next) {

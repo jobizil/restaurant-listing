@@ -24,7 +24,7 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
   ignoreFields = ["select", "sort"];
   // Loop through ignoreFields on reqQuery and delete
   ignoreFields.forEach((param) => delete reqQuery[param]);
-
+  console.log(reqQuery);
   // Convert json into string
   let queryString = JSON.stringify(reqQuery);
 
@@ -49,7 +49,6 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
   if (req.query.sort) {
     const sortBy = req.query.sort.split(",").join(" ");
     query = query.sort(sortBy);
-    console.log(sortBy);
   } else {
     query = query.sort("-reviews");
   }
@@ -61,6 +60,8 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
     Result: restaurant,
   });
 });
+
+// ==========================
 
 // @desc        Single Restaurant
 // @routes      GET /api/v1/auth/restaurant/:id
