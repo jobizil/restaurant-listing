@@ -63,29 +63,19 @@ exports.getAllMenu = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page, 10) || 1;
   const index = (page - 1) * limit;
   const lastPage = page * limit;
-  const totalPages = await Menu.countDocuments();
+  const totalDocuments = await Menu.countDocuments();
 
   query = query.skip(index).limit(limit);
 
   const menu = await query;
   currentPage = {};
 
-  if (index > 0) {
-    currentPage.prev = {
-      page: page - 1,
-      limit,
-    };
-  }
-  if (lastPage < totalPages) {
-    currentPage.next = {
-      page: page + 1,
-      limit,
-    };
-  }
+  if (index > 0) currentPage.prev = { Page: page - 1 };
+  if (lastPage < totalDocuments) currentPage.next = { Page: page + 1 };
 
   res.status(200).json({
-    "Total Found": menu.length,
-    currentPage,
+    "Found on this page": `${menu.length} of ${limit}`,
+    Pages: currentPage,
     Result: menu,
   });
 });

@@ -54,30 +54,18 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page, 10) || 1;
   const indexPage = (page - 1) * limit;
   const lastPage = page * limit;
-  const totalPages = await Restaurant.countDocuments();
+  const totalDocuments = await Restaurant.countDocuments();
   query = query.skip(indexPage).limit(limit);
 
   const restaurant = await query;
   // Validate current page index
   currentPage = {};
-  if (indexPage > 0) {
-    currentPage.prev = {
-      page: page - 1,
-      limit,
-    };
-  }
-
-  if (lastPage < totalPages) {
-    currentPage.next = {
-      page: page + 1,
-      limit,
-    };
-  }
+  if (indexPage > 0) currentPage.prev = { page: page - 1 };
+  if (lastPage < totalDocuments) currentPage.next = { page: page + 1 };
 
   res.json({
-    success: true,
+    "Found on this page": `${restaurant.length} of ${limit}`,
     currentPage,
-    "Total Found": restaurant.length,
     Result: restaurant,
   });
 });
