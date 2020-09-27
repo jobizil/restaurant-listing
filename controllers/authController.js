@@ -1,6 +1,6 @@
 const path = require("path");
 const Restaurant = require("../models/restaurantModel");
-// const Menu = require("../models/menuModel");
+const Menu = require("../models/menuModel");
 const asyncHandler = require("../middleware/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
 
@@ -21,7 +21,7 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
 
   // Exclude fields when being matched for filtering
 
-  ignoreFields = ["select", "sort"];
+  ignoreFields = ["select", "sort", "limit", "page"];
   // Loop through ignoreFields on reqQuery and delete
   ignoreFields.forEach((param) => delete reqQuery[param]);
   console.log(reqQuery);
@@ -35,9 +35,7 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
   );
 
   // Find resources in db
-  query = Restaurant.find(JSON.parse(queryString)).populate({
-    path: "menu",
-  });
+  query = Restaurant.find(JSON.parse(queryString));
 
   // Select field's value
   if (req.query.select) {
@@ -52,10 +50,33 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
   } else {
     query = query.sort("-reviews");
   }
+  const limit = parseInt(req.query.limit, 10) || 5;
+  const page = parseInt(req.query.page, 10) || 1;
+  const indexPage = (page - 1) * limit;
+  const lastPage = page * limit;
+  const totalPages = await Restaurant.countDocuments();
+  query = query.skip(indexPage).limit(limit);
 
   const restaurant = await query;
+  // Validate current page index
+  currentPage = {};
+  if (indexPage > 0) {
+    currentPage.prev = {
+      page: page - 1,
+      limit,
+    };
+  }
+
+  if (lastPage < totalPages) {
+    currentPage.next = {
+      page: page + 1,
+      limit,
+    };
+  }
+
   res.json({
     success: true,
+    currentPage,
     "Total Found": restaurant.length,
     Result: restaurant,
   });
@@ -69,7 +90,7 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
 
 exports.getRestaurant = asyncHandler(async (req, res, next) => {
   const _id = req.params.id;
-  const restaurant = await Restaurant.findById(_id);
+  const restaurant = await Restaurant.findById(_id).populate("menu");
   if (!restaurant) {
     return next(
       new ErrorResponse(`Sorry, the Id ${_id} could not be fetched.`, 404)
