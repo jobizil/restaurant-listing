@@ -41,14 +41,17 @@ exports.getAllMenu = asyncHandler(async (req, res, next) => {
   let query;
   const reqQuery = { ...req.query };
 
-  ignoreField = ["sort"];
+  ignoreField = ["sort", "limit", "page"];
   ignoreField.forEach((param) => delete reqQuery[param]);
 
   queryStr = JSON.stringify(reqQuery);
   if (_restaurantId) {
     query = Menu.find({ restaurant: _restaurantId });
   } else {
-    query = Menu.find(JSON.parse(queryStr)).populate("restaurant");
+    query = Menu.find(JSON.parse(queryStr)).populate({
+      path: "restaurant",
+      select: "businessName email restaurantType address",
+    });
   }
   if (req.query.sort) {
     const sortBy = req.query.sort.split(",").join(" ");
@@ -56,9 +59,33 @@ exports.getAllMenu = asyncHandler(async (req, res, next) => {
   } else {
     query = query.sort("menuName");
   }
+  const limit = parseInt(req.query.limit, 10) || 5;
+  const page = parseInt(req.query.page, 10) || 1;
+  const index = (page - 1) * limit;
+  const lastPage = page * limit;
+  const totalPages = await Menu.countDocuments();
+
+  query = query.skip(index).limit(limit);
+
   const menu = await query;
+  currentPage = {};
+
+  if (index > 0) {
+    currentPage.prev = {
+      page: page - 1,
+      limit,
+    };
+  }
+  if (lastPage < totalPages) {
+    currentPage.next = {
+      page: page + 1,
+      limit,
+    };
+  }
+
   res.status(200).json({
     "Total Found": menu.length,
+    currentPage,
     Result: menu,
   });
 });
@@ -73,7 +100,7 @@ exports.getMenu = asyncHandler(async (req, res, next) => {
   const _id = req.params.id;
   const menu = await Menu.findById(_id).populate({
     path: "restaurant",
-    select: "businessName email restaurantType address",
+    select: "businessName restaurantType address",
   });
   if (!menu) {
     return next(new ErrorResponse(`No menu with Id ${_id} found`, 404));
