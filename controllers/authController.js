@@ -24,7 +24,7 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
   ignoreFields = ["select", "sort", "limit", "page"];
   // Loop through ignoreFields on reqQuery and delete
   ignoreFields.forEach((param) => delete reqQuery[param]);
-  console.log(reqQuery);
+
   // Convert json into string
   let queryString = JSON.stringify(reqQuery);
 
@@ -34,16 +34,19 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
     (match) => `$${match}`
   );
 
-  // Find resources in db
-  query = Restaurant.find(JSON.parse(queryString));
+  // Find data in database and Populate
+  query = Restaurant.find(JSON.parse(queryString)).populate({
+    path: "foodMenu",
+    select: "menuName",
+  });
 
-  // Select field's value
+  // Select param's value
   if (req.query.select) {
     const fields = req.query.select.split(",").join(" ");
     query = query.select(fields);
   }
 
-  // Sort field's value
+  // Sort param's value
   if (req.query.sort) {
     const sortBy = req.query.sort.split(",").join(" ");
     query = query.sort(sortBy);
@@ -78,7 +81,10 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
 
 exports.getRestaurant = asyncHandler(async (req, res, next) => {
   const _id = req.params.id;
-  const restaurant = await Restaurant.findById(_id).populate("menu");
+  const restaurant = await Restaurant.findById(_id).populate({
+    path: "foodMenu",
+    select: "menuName description",
+  });
   if (!restaurant) {
     return next(
       new ErrorResponse(`Sorry, the Id ${_id} could not be fetched.`, 404)
@@ -155,15 +161,7 @@ exports.uploadRestaurantPhoto = asyncHandler(async (req, res, next) => {
   console.log(file.data);
   // Customise file name
   file.name = `restaurant_${rand}${today}${path.parse(file.name).ext}`;
-  // Store in path folder
-  // file.mv(
-  //   `${process.env.FILE_UPLOAD_PATH}/restaurant/${file.name}`,
-  //   async (err) => {
-  //     if (err) {
-  //       console.log(err);
-  //       return next(new ErrorResponse("Could not upload file", 500));
-  //     }
-  //   })
+
   // Insert in DB
   await Restaurant.findByIdAndUpdate(_id, {
     photo: file.data,

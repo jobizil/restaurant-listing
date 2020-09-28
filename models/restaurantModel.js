@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
+const Menu = require("./menuModel");
 
 const geocoder = require("../utils/geocoder");
-
-const RestaurantSchema = new mongoose.Schema(
+const Schema = mongoose.Schema;
+const RestaurantSchema = new Schema(
   {
     businessName: {
       type: String,
@@ -34,7 +35,6 @@ const RestaurantSchema = new mongoose.Schema(
     },
     parkinglot: {
       type: Boolean,
-
       default: false,
     },
     address: {
@@ -42,34 +42,19 @@ const RestaurantSchema = new mongoose.Schema(
       trim: true,
       required: [true, "Please input an address."],
     },
-    location: {
-      // GeoJSON Points
-      type: {
-        type: String,
-        enum: ["Point"],
-      },
-      coordinates: {
-        type: [Number],
-        index: "2dsphere", //Example of 2dsphere:[ -73.97, 40.77 ]
-      },
-      formattedAddress: String,
-      street: String,
-      city: String,
-      state: String,
-    },
-    averageRating: {
-      type: Number,
-      min: [1, "Rating must be at least 1"],
-      max: [10, "Rating must be at most 10"],
-    },
+    // averageRating: {
+    //   type: Number,
+    //   min: [1, "Rating must be at least 1"],
+    //   max: [10, "Rating must be at most 10"],
+    // },
     averageCost: {
       type: Number,
-      default: 1000,
+      default: 700,
     },
     photo: {
       type: Buffer,
     },
-    restauranttype: {
+    restaurantType: {
       type: String,
       lowercase: true,
       enum: ["eatery", "bukka", "canteen"],
@@ -79,15 +64,17 @@ const RestaurantSchema = new mongoose.Schema(
     direction: String,
   },
   {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
     timestamps: true,
   }
 );
 
-// Reverse Populate with virtuals
-RestaurantSchema.virtual("menu", {
+// Populate with virtuals
+RestaurantSchema.virtual("foodMenu", {
   ref: "Menu",
-  localField: "_id",
   foreignField: "restaurant",
+  localField: "_id",
   justOne: false,
 });
 
@@ -98,6 +85,13 @@ RestaurantSchema.pre("save", function (next) {
   });
   next();
 });
+
+// Delete menu attached to Restaurant
+RestaurantSchema.pre("remove", async function (next) {
+  await this.model("Menu").deleteMany({ restaurant: this._id });
+  next();
+});
+
 // Generate Unique email through businessName
 RestaurantSchema.pre("save", function (next) {
   if (!this.email) {

@@ -9,7 +9,7 @@ const {
   upload,
 } = require("../controllers/menuController");
 const router = express.Router({
-  mergeParams: true
+  mergeParams: true,
 });
 
 router.route("/").post(createMenu).get(getAllMenu);

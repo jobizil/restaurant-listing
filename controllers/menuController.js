@@ -31,7 +31,7 @@ exports.createMenu = asyncHandler(async (req, res, next) => {
 
 // ========================
 
-// @desc        Get all Menu
+// @desc        Get all Menu linked to a restaurant
 // @routes      GET /api/v1/auth/menu
 // @routes      GET /api/v1/auth/restaurant/:restaurantId/menu
 // @access      Public
@@ -48,10 +48,7 @@ exports.getAllMenu = asyncHandler(async (req, res, next) => {
   if (_restaurantId) {
     query = Menu.find({ restaurant: _restaurantId });
   } else {
-    query = Menu.find(JSON.parse(queryStr)).populate({
-      path: "restaurant",
-      select: "businessName email restaurantType address",
-    });
+    query = Menu.find(JSON.parse(queryStr)).populate("restaurant");
   }
   if (req.query.sort) {
     const sortBy = req.query.sort.split(",").join(" ");
@@ -75,7 +72,7 @@ exports.getAllMenu = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     "Found on this page": `${menu.length} of ${limit}`,
-    Pages: currentPage,
+    // Pages: currentPage,
     Result: menu,
   });
 });
