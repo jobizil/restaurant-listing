@@ -73,6 +73,7 @@ exports.getAllMenu = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     "Found on this page": `${menu.length} of ${limit}`,
     // Pages: currentPage,
+    "Total Menu": totalDocuments,
     Result: menu,
   });
 });

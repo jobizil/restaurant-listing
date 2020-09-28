@@ -42,11 +42,6 @@ const RestaurantSchema = new Schema(
       trim: true,
       required: [true, "Please input an address."],
     },
-    // averageRating: {
-    //   type: Number,
-    //   min: [1, "Rating must be at least 1"],
-    //   max: [10, "Rating must be at most 10"],
-    // },
     averageCost: {
       type: Number,
       default: 700,
@@ -88,7 +83,7 @@ RestaurantSchema.pre("save", function (next) {
 
 // Delete menu attached to Restaurant
 RestaurantSchema.pre("remove", async function (next) {
-  await this.model("Menu").deleteMany({ restaurant: this._id });
+  await Menu.deleteMany({ restaurant: this._id });
   next();
 });
 

@@ -69,6 +69,7 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
   res.json({
     "Found on this page": `${restaurant.length} of ${limit}`,
     currentPage,
+    "Total Restaurants": totalDocuments,
     Result: restaurant,
   });
 });
@@ -117,10 +118,12 @@ exports.updateRestaurant = asyncHandler(async (req, res, next) => {
 // =================================
 exports.deleteRestaurant = asyncHandler(async (req, res, next) => {
   const _id = req.params.id;
-  const restaurant = await Restaurant.findByIdAndRemove(_id);
-  if (!restaurant) {
+  const restaurant = await Restaurant.findById(_id);
+  if (!restaurant)
     return next(new ErrorResponse(`Restaurant with Id ${_id} not found.`, 404));
-  }
+
+  restaurant.remove();
+
   res.status(200).json({
     success: true,
     data: {},
