@@ -81,7 +81,7 @@ RestaurantSchema.pre("save", function (next) {
   next();
 });
 
-// Delete menu attached to Restaurant
+// Cascade Delete menu attached to Restaurant
 RestaurantSchema.pre("remove", async function (next) {
   await Menu.deleteMany({ restaurant: this._id });
   next();
