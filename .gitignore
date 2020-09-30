@@ -8,6 +8,8 @@ public
 routes/imageRouter.js
 controllers/imagesController.js
 
+index.js
+cloudinaryConfig.js
 
 
 
