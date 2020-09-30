@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const connectDB = async () => {
-  const connection = await mongoose.connect(process.env.DB_URI, {
+  const connection = await mongoose.connect(mongodb+srv://quill-tech:HELLOworld081@quilltech.d2rzs.mongodb.net/restaurant-listing?retryWrites=true&w=majority, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
