@@ -42,27 +42,35 @@ When finally Onboarding, Restaurant owners have the option of enhancing their li
 - price,
 - restaurant
 
+## Documentation
+
+-Get full documentation here using [Postman]
+
+<!--
 ## ROUTES / ENDPOINTS
 
-| T/L 	| Method 	| Route 	| Function 	|
-|-	|-	|-	|-	|
-| [ ]	| GET 	| api/v1/auth/ 	| Index page of the website 	|
-| [x]	| POST 	| api/v1/auth/restaurant 	| Creates new restaurant 	|
-| [x]	| GET 	| api/v1/auth/restaurant 	| Displays all restaurant 	|
-| [x]	| GET 	| api/v1/auth/restaurant/:Id 	| Gets a single restaurant 	|
-| [x]	| PUT 	| api/v1/auth/restaurant/:Id 	| Updates a restaurant 	|
-| [x]	| DELETE 	| api/v1/auth/restaurant/:Id 	| Deletes a restaurant 	|
-| [x]	| PUT   | api/v1/auth/restaurant/restaurantId/photo 	| Upload restaurant photo 	|
-| [x]	| POST 	| /api/v1/auth/restaurant/restaurantId/menu 	| Create a Menu in the restaurant 	|
-| [x]	| GET 	| api/v1/auth/restaurant/restaurantId/menu 	| Gets all Menu associated to a single restaurant 	|
-| [x]	| GET 	| api/v1/auth/menu 	| This gets all menu in the database 	|
-| [x]	| GET 	| /menu/:id 	| Gets a single menu 	|
-| [x]	| PUT 	| api/v1/auth/menu/:id 	| Updates a single menu 	|
-| [x]	| DELETE 	| api/v1/auth/menu/:id 	| Deletes a single menu 	|
-| [ ]	| POST 	| api/v1/auth/menu/menuId/photo 	| Upload multiple menu photo 	|
-
+| T/L | Method | Route                                     | Function                                        |
+| --- | ------ | ----------------------------------------- | ----------------------------------------------- |
+| [ ] | GET    | api/v1/auth/                              | Index page of the website                       |
+| [x] | POST   | api/v1/auth/restaurant                    | Creates new restaurant                          |
+| [x] | GET    | api/v1/auth/restaurant                    | Displays all restaurant                         |
+| [x] | GET    | api/v1/auth/restaurant/:Id                | Gets a single restaurant                        |
+| [x] | PUT    | api/v1/auth/restaurant/:Id                | Updates a restaurant                            |
+| [x] | DELETE | api/v1/auth/restaurant/:Id                | Deletes a restaurant                            |
+| [x] | PUT    | api/v1/auth/restaurant/restaurantId/photo | Upload restaurant photo                         |
+| [x] | POST   | /api/v1/auth/restaurant/restaurantId/menu | Create a Menu in the restaurant                 |
+| [x] | GET    | api/v1/auth/restaurant/restaurantId/menu  | Gets all Menu associated to a single restaurant |
+| [x] | GET    | api/v1/auth/menu                          | This gets all menu in the database              |
+| [x] | GET    | /menu/:id                                 | Gets a single menu                              |
+| [x] | PUT    | api/v1/auth/menu/:id                      | Updates a single menu                           |
+| [x] | DELETE | api/v1/auth/menu/:id                      | Deletes a single menu                           |
+| [ ] | POST   | api/v1/auth/menu/menuId/photo             | Upload multiple menu photo                      |
 
 #### T/L=>Task Lists
 
-	- [x] Completed task item
-    - [ ] Unfinished task item
+    - [x] Completed task item
+    - [ ] Unfinished task item -->
+
+[postman]: https://documenter.getpostman.com/view/12204297/TVKJwEWL
+
+<!-- [jobizil]: https://github.com/jobizil -->
