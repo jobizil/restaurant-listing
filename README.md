@@ -44,7 +44,7 @@ When finally Onboarding, Restaurant owners have the option of enhancing their li
 
 ## Documentation
 
--Get full documentation here using [Postman]
+- Get full documentation here using [Postman]
 
 <!--
 ## ROUTES / ENDPOINTS
