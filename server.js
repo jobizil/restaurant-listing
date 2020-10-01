@@ -9,34 +9,37 @@ dotenv.config({ path: "./config/config.env" });
 const connectDB = require("./config/dbConfig");
 const restaurant = require("./routes/restaurantRouter");
 const menu = require("./routes/menuRouter");
-
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
 PORT = process.env.PORT || 3500;
+API_VERSION = process.env.API_VERSION || "v1";
+
 // Body Parser
 app.use(express.json());
+
 // Upload photo
 app.use(fileUpload());
 
 //  Set static folders
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 
 // Connect to Database
 connectDB();
 
-const API_VERSION = process.env.API_VERSION || "v1";
-
-// Add Router
+// Load Routers
 app.use(`/api/${API_VERSION}/restaurant`, restaurant);
 app.use(`/api/${API_VERSION}/menu`, menu);
 
+// Page not found error
 app.get("*", (req, res) => {
   res.send(
-    `<h2>404, page not found</h2><h4> Proper documentation coming in soon!</h4>`
+    `<h2>404, page not found</h2><h4> Proper documentation <a href = "https://documenter.getpostman.com/view/12204297/TVKJwEWL">here<a/> using postman!</h4>`
   );
 });
+
+// Load errroHandler
 
 app.use(errorHandler);
 
@@ -44,6 +47,7 @@ const SERVER = app.listen(
   PORT,
   console.log(`Server running on ${process.env.NODE_ENV} mode on port ${PORT}`)
 );
+
 // HandleUnhandledPromiseRejection from Mongo Connection
 process.on("unhandledRejection", (error, promise) => {
   console.log(`${error.message}`);

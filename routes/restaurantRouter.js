@@ -26,4 +26,5 @@ router
   .delete(deleteRestaurant);
 
 router.route("/:id/photo").put(uploadRestaurantPhoto);
+
 module.exports = router;

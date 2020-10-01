@@ -20,8 +20,8 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
   const reqQuery = { ...req.query };
 
   // Exclude fields when being matched for filtering
-
   ignoreFields = ["select", "sort", "limit", "page"];
+
   // Loop through ignoreFields on reqQuery and delete
   ignoreFields.forEach((param) => delete reqQuery[param]);
 
@@ -53,7 +53,7 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
   } else {
     query = query.sort("-reviews");
   }
-  const limit = parseInt(req.query.limit, 10) || 5;
+  const limit = parseInt(req.query.limit, 10) || 10;
   const page = parseInt(req.query.page, 10) || 1;
   const indexPage = (page - 1) * limit;
   const lastPage = page * limit;
@@ -61,7 +61,8 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
   query = query.skip(indexPage).limit(limit);
 
   const restaurant = await query;
-  // Validate current page index
+
+  // Validate current page number
   currentPage = {};
   if (indexPage > 0) currentPage.prev = { page: page - 1 };
   if (lastPage < totalDocuments) currentPage.next = { page: page + 1 };
@@ -73,8 +74,6 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
     Result: restaurant,
   });
 });
-
-// ==========================
 
 // @desc        Single Restaurant
 // @routes      GET /api/v1/auth/restaurant/:id

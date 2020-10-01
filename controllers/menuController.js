@@ -216,5 +216,5 @@ exports.upload =
         message: "Photos uploaded successfully.",
       });
     }
-    console.log(error);
+    console.error(error);
   });

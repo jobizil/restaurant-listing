@@ -16,3 +16,15 @@ helper
 routes/imageRouter.js
 
 controllers/imagesController.js
+
+
+
+
+// Middleware logger to know req protocol
+const logger = (req, res, next) => {
+  console.info(
+    `${req.method} ${req.protocol}://${req.get("host")}${req.originalUrl}`
+  );
+  next();
+};
+app.use(logger);
