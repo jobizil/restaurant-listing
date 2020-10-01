@@ -35,7 +35,7 @@ app.use(`/api/${API_VERSION}/menu`, menu);
 // Page not found error
 app.get("*", (req, res) => {
   res.send(
-    `<h2>404, page not found</h2><h4> Proper documentation <a href = "https://documenter.getpostman.com/view/12204297/TVKJwEWL">here<a/> using postman!</h4>`
+    `<h2>404, page not found</h2><h4> Proper documentation <a href = "https://documenter.getpostman.com/view/12204297/TVKJwEWL" target="blank" >here<a/> using postman!</h4>`
   );
 });
 
