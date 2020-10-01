@@ -8,7 +8,7 @@ const {
   deleteRestaurant,
   uploadRestaurantPhoto,
   upload,
-} = require("../controllers/authController");
+} = require("../controllers/restaurantController");
 // Include other resource Route
 const menu = require("./menuRouter");
 
