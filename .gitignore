@@ -1,63 +1,18 @@
+
 node_modules
+
 config/config.env
+
 Mock Data
+
 _mockData
+
 seeders.js
+
 public
 
+helper
+
 routes/imageRouter.js
+
 controllers/imagesController.js
-
-index.js
-cloudinaryConfig.js
-
-
-
-// @desc        Upload photo
-// @routes      PUT /menu/:id/photos
-// @access      Private
-
-exports.uploadMenuPhoto = asyncHandler(async (req, res, next) => {
-  const _id = req.params.id;
-  const restaurant = await Menu.findById(_id);
-  if (!restaurant) {
-    return next(new ErrorResponse(`Menu with Id ${_id} not found.`, 404));
-  }
-  // Check if file was uploaded
-  if (!req.files) {
-    return next(new ErrorResponse("Please upload a photo.", 400));
-  } else {
-    let data = [];
-    // loop through uploaded files
-    _.forEach(_.keysIn(req.files.photos), (key) => {
-      let file = req.files.photos[key];
-
-      // Customise file name
-      // photo.name = `photo_${Menu.slug}${path.parse(file.name).ext}`;
-
-      // Move photo to upload directory
-      photo.mv(`${process.env.FILE_UPLOAD_PATH}/menu/${file.name}`);
-      // photo.mv("./uploads/" + photo.name);
-
-      // async (err) => {
-      //   if (err) {
-      //     console.log(err);
-      //     return next(new ErrorResponse("Could not upload file", 500));
-      //   }
-      // push file uploads to param body
-      data.push({
-        name: photo.name,
-        size: photo.size,
-        mimetype: photo.mimetype,
-      });
-      // }
-      // );
-      res.status(200).json({
-        success: true,
-        Message: "Files uploaded successfully.",
-        data,
-      });
-    });
-    return next(new ErrorResponse("Minimum picture photo upload is 2.", 500));
-  }
-});

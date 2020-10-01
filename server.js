@@ -10,7 +10,6 @@ const connectDB = require("./config/dbConfig");
 const restaurant = require("./routes/restaurantRouter");
 const menu = require("./routes/menuRouter");
 
-
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
@@ -27,19 +26,17 @@ app.use(express.static(path.join(__dirname, "public")));
 // Connect to Database
 connectDB();
 
-const API_VERSION = process.env.API_VERSION || 'v1'
-
+const API_VERSION = process.env.API_VERSION || "v1";
 
 // Add Router
-// app.use("/api/v1/auth/restaurant", auth);
-// app.use("/api/v1/auth/menu", menu);
-app.use(`/api/${API_VERSION}/restaurant`, restaurant)
-app.use(`/api/${API_VERSION}/menu`, menu)
+app.use(`/api/${API_VERSION}/restaurant`, restaurant);
+app.use(`/api/${API_VERSION}/menu`, menu);
 
-app.get('*', (req, res)=>{
-  res.send(`<h2>404, page not found</h2><h4> Proper documentation coming in soon!</h4>`)
-})
-
+app.get("*", (req, res) => {
+  res.send(
+    `<h2>404, page not found</h2><h4> Proper documentation coming in soon!</h4>`
+  );
+});
 
 app.use(errorHandler);
 

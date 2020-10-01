@@ -161,7 +161,7 @@ exports.uploadRestaurantPhoto = asyncHandler(async (req, res, next) => {
   today = Date.now().toString().slice(-3);
   let rand = Math.floor(Math.random() * 10000);
 
-  console.log(file.data);
+  // console.log(file.data);
   // Customise file name
   file.name = `restaurant_${rand}${today}${path.parse(file.name).ext}`;
 
