@@ -1,4 +1,5 @@
 const express = require("express");
+const { multerUpload } = require("../config/multerConfig");
 
 const {
   createRestaurant,
@@ -7,7 +8,6 @@ const {
   updateRestaurant,
   deleteRestaurant,
   uploadRestaurantPhoto,
-  upload,
 } = require("../controllers/restaurantController");
 // Include other resource Route
 const menu = require("./menuRouter");
@@ -25,6 +25,6 @@ router
   .put(updateRestaurant)
   .delete(deleteRestaurant);
 
-router.route("/:id/photo").put(uploadRestaurantPhoto);
+router.post("/:id/photo", multerUpload.single("image"), uploadRestaurantPhoto);
 
 module.exports = router;

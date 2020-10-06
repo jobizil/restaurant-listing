@@ -15,9 +15,8 @@ const MenuSchema = new Schema({
     maxlength: [500, "Description should not be more than 500 Characters"],
   },
 
-  photo: {
-    ContentType: String,
-    data: Buffer,
+  images: {
+    type: []
   },
   restaurant: {
     type: Schema.Types.ObjectId,

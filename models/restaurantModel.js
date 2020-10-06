@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const slugify = require("slugify");
 const Menu = require("./menuModel");
 
-const geocoder = require("../utils/geocoder");
 const Schema = mongoose.Schema;
 const RestaurantSchema = new Schema(
   {
@@ -46,8 +45,8 @@ const RestaurantSchema = new Schema(
       type: Number,
       default: 700,
     },
-    photo: {
-      type: Buffer,
+    image: {
+      type: String,
     },
     restaurantType: {
       type: String,

@@ -1,8 +1,13 @@
-const path = require("path");
+// const path = require("path");
 const Restaurant = require("../models/restaurantModel");
-const Menu = require("../models/menuModel");
 const asyncHandler = require("../middleware/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
+const { dataUri } = require("../config/multerConfig");
+const { uploader, cloudinaryConfig } = require("../config/cloudinaryConfig");
+const dotenv = require("dotenv");
+dotenv.config({ path: "./config/config" });
+
+cloudinaryConfig();
 
 // @desc        Create a Restaurant
 // @routes      GET /api/v1/auth
@@ -17,7 +22,9 @@ exports.createRestaurant = asyncHandler(async (req, res, next) => {
 
 exports.getRestaurants = asyncHandler(async (req, res, next) => {
   let query;
-  const reqQuery = { ...req.query };
+  const reqQuery = {
+    ...req.query,
+  };
 
   // Exclude fields when being matched for filtering
   ignoreFields = ["select", "sort", "limit", "page"];
@@ -64,8 +71,14 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
 
   // Validate current page number
   currentPage = {};
-  if (indexPage > 0) currentPage.prev = { page: page - 1 };
-  if (lastPage < totalDocuments) currentPage.next = { page: page + 1 };
+  if (indexPage > 0)
+    currentPage.prev = {
+      page: page - 1,
+    };
+  if (lastPage < totalDocuments)
+    currentPage.next = {
+      page: page + 1,
+    };
 
   res.json({
     "Found on this page": `${restaurant.length} of ${limit}`,
@@ -83,7 +96,7 @@ exports.getRestaurant = asyncHandler(async (req, res, next) => {
   const _id = req.params.id;
   const restaurant = await Restaurant.findById(_id).populate({
     path: "foodMenu",
-    select: "menuName description",
+    select: "menuName description images",
   });
   if (!restaurant) {
     return next(
@@ -135,41 +148,43 @@ exports.deleteRestaurant = asyncHandler(async (req, res, next) => {
 
 exports.uploadRestaurantPhoto = asyncHandler(async (req, res, next) => {
   const _id = req.params.id;
+  const image = req.file;
+
+  // Validate restaurant ID
   const restaurant = await Restaurant.findById(_id);
   if (!restaurant) {
     return next(new ErrorResponse(`Restaurant with Id ${_id} not found.`, 404));
   }
-  // Check if file was uploaded
-  if (!req.files) {
+
+  if (!image) {
     return next(new ErrorResponse("Please upload a photo.", 400));
   }
 
-  let file = req.files.photo;
-
-  // validate Uploaded file if its a photo
-  if (!file.mimetype.startsWith("image")) {
-    return next(new ErrorResponse(`Sorry, upload only images`, 400));
+  // Validate Uploaded file if its a photos
+  if (!image.mimetype.startsWith("image")) {
+    return next(new ErrorResponse("Sorry, only images can be uploaded", 400));
   }
+
   // validate file size
-  if (file.size > process.env.FILE_SIZE) {
-    return next(new ErrorResponse(`Sorry, file is bigger than 2mb`, 400));
+  if (image.size > process.env.FILE_SIZE) {
+    return next(new ErrorResponse(`Sorry, file is bigger than 4mb`, 400));
   }
-
-  //Generate random date and Pick last 3 digits of tiimestamp generated
-  let today = new Date();
-  today = Date.now().toString().slice(-3);
-  let rand = Math.floor(Math.random() * 10000);
-
-  // console.log(file.data);
-  // Customise file name
-  file.name = `restaurant_${rand}${today}${path.parse(file.name).ext}`;
-
-  // Insert in DB
-  await Restaurant.findByIdAndUpdate(_id, {
-    photo: file.data,
-  });
-  res.status(200).json({
-    success: true,
-    data: file.name,
-  });
+  const parseImage = dataUri(image).content;
+  try {
+    const result = await uploader.upload(parseImage, {
+      folder: "images/restaurant",
+    });
+    await Restaurant.findByIdAndUpdate(_id, {
+      image: result.secure_url,
+    });
+    return res.status(201).json({
+      message: "Photo uploaded successfully.",
+      data: result.secure_url,
+    });
+  } catch (error) {
+    // console.error(error);
+    return next(
+      new ErrorResponse("Could not upload image, please try again", 500)
+    );
+  }
 });

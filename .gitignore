@@ -13,9 +13,6 @@ public
 
 helper
 
-routes/imageRouter.js
-
-controllers/imagesController.js
 
 
 

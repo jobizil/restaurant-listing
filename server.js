@@ -1,29 +1,25 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const fileUpload = require("express-fileupload");
-const path = require("path");
 
-dotenv.config({ path: "./config/config.env" });
+dotenv.config({
+  path: "./config/config.env"
+});
 
 // External Files
 const connectDB = require("./config/dbConfig");
 const restaurant = require("./routes/restaurantRouter");
 const menu = require("./routes/menuRouter");
+// const upload = require("./routes/imageRouter");
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
 PORT = process.env.PORT || 3500;
+
 API_VERSION = process.env.API_VERSION || "v1";
 
 // Body Parser
 app.use(express.json());
-
-// Upload photo
-app.use(fileUpload());
-
-//  Set static folders
-// app.use(express.static(path.join(__dirname, "public")));
 
 // Connect to Database
 connectDB();
@@ -40,7 +36,6 @@ app.get("*", (req, res) => {
 });
 
 // Load errroHandler
-
 app.use(errorHandler);
 
 const SERVER = app.listen(

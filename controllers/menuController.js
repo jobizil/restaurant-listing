@@ -2,8 +2,10 @@ const Menu = require("../models/menuModel");
 const Restaurant = require("../models/restaurantModel");
 const asyncHandler = require("../middleware/asyncHandler");
 const ErrorResponse = require("../utils/errorResponse");
-const path = require("path");
-const multer = require("multer");
+const { dataUri } = require("../config/multerConfig");
+const { uploader, cloudinaryConfig } = require("../config/cloudinaryConfig");
+
+cloudinaryConfig();
 
 // @desc        Create a Menu
 // @routes      POST /api/v1/auth/restaurant/:restaurantId/menu
@@ -39,14 +41,18 @@ exports.createMenu = asyncHandler(async (req, res, next) => {
 exports.getAllMenu = asyncHandler(async (req, res, next) => {
   const _restaurantId = req.params.restaurantId;
   let query;
-  const reqQuery = { ...req.query };
+  const reqQuery = {
+    ...req.query,
+  };
 
   ignoreField = ["sort", "limit", "page"];
   ignoreField.forEach((param) => delete reqQuery[param]);
 
   queryStr = JSON.stringify(reqQuery);
   if (_restaurantId) {
-    query = Menu.find({ restaurant: _restaurantId });
+    query = Menu.find({
+      restaurant: _restaurantId,
+    });
   } else {
     query = Menu.find(JSON.parse(queryStr)).populate("restaurant");
   }
@@ -67,8 +73,14 @@ exports.getAllMenu = asyncHandler(async (req, res, next) => {
   const menu = await query;
   currentPage = {};
 
-  if (index > 0) currentPage.prev = { Page: page - 1 };
-  if (lastPage < totalDocuments) currentPage.next = { Page: page + 1 };
+  if (index > 0)
+    currentPage.prev = {
+      Page: page - 1,
+    };
+  if (lastPage < totalDocuments)
+    currentPage.next = {
+      Page: page + 1,
+    };
 
   res.status(200).json({
     "Found on this page": `${menu.length} of ${limit}`,
@@ -145,76 +157,47 @@ exports.deleteMenu = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc        Upload photo
-// @routes      PUT /menu/photos
+// @desc        Upload menu photos to cloudinary
+// @routes      PUT /menu/:id/uploads
 // @access      Private
 
-// Multer Configuration
+exports.uploadMenuPhoto = asyncHandler(async (req, res, next) => {
+  const _id = req.params.id;
+  let menu = await Menu.findById(_id);
+  const images = req.files;
 
-const uploadFile = multer({
-  limits: {
-    files: 8,
-  },
-});
+  // Validate menu id
+  if (!menu) {
+    return res.status(400).send(`Menu with Id not found.`);
+  }
+  // Upload images to Coludinary
+  try {
+    await images.forEach(async (image) => {
+      const parseImage = dataUri(image).content;
 
-exports.upload =
-  (uploadFile.array("photos", 8),
-  async (req, res, next) => {
-    const photos = req.files;
-    const _id = req.params.id;
-    const menu = await Menu.findById(_id);
-
-    // Check if menu id is valid
-    if (!menu) {
-      return next(new ErrorResponse(`Menu with ${_id} is not found.`, 404));
-    }
-
-    // Check if any photo is selected for upload
-    if (!photos) {
-      return next(new ErrorResponse("No photo selected.", 400));
-    } else {
-      let data = [];
-      // Loop through req.files.photos
-      for (let key in req.files.photos) {
-        if (req.files.photos.hasOwnProperty(key)) {
-          // Assign photos arrays to a variable
-          let photoURL = req.files.photos[key];
-
-          //Generate random date and Pick last 3 digits of tiimestamp generated
-          let today = new Date();
-          today = Date.now().toString().slice(-3);
-          let rand = Math.floor(Math.random() * 10000);
-
-          // Rename uploaded files
-          photoURL.name = `menu_${rand}${today}${
-            path.parse(photoURL.name).ext
-          }`;
-
-          // Validate uploaded file
-          if (!photoURL.mimetype.startsWith("image")) {
-            return next(new ErrorResponse("Photos only", 400));
-          }
-          // Validate uploaded file size
-          if (photoURL.size > process.env.FILE_SIZE) {
-            return next(
-              new ErrorResponse("Sorry, file is larger than 2mb", 400)
-            );
-          }
-          data.push({
-            name: photoURL.name,
-            data: photoURL.data,
-            mimeType: photoURL.mimeType,
-            size: photoURL.size,
-          });
-          await Menu.findByIdAndUpdate(_id, {
-            photo: photoURL.data,
-          });
-        }
-      }
-      return res.json({
-        status: true,
-        message: "Photos uploaded successfully.",
+      const result = await uploader.upload(parseImage, {
+        folder: "images/menus",
       });
-    }
-    console.error(error);
+      console.log(result.secure_url);
+      await Menu.findOneAndUpdate(
+        {
+          _id,
+        },
+        {
+          $addToSet: {
+            images: result.secure_url,
+          },
+        }
+      );
+
+      return result;
+    });
+  } catch (error) {
+    return next(
+      new ErrorResponse("Oops, an error occured, please try again", 500)
+    );
+  }
+  return res.status(201).send({
+    message: "Images uploaded succesfully",
   });
+});
