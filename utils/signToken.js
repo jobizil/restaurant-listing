@@ -1,6 +1,6 @@
 // Create Get Token, create Cookie and send Response
 exports.tokenResponse = (authUser, statusCode, res) => {
-  // Generate Token
+  // Generate JWToken
   const token = authUser.signToken();
 
   const options = {
@@ -9,11 +9,9 @@ exports.tokenResponse = (authUser, statusCode, res) => {
     ),
     httpOnly: true,
   };
-  if (process.env.NODE_ENV === "production") {
-    options.secure = true;
-  }
+  if (process.env.NODE_ENV === "production") options.secure = true;
   res
     .status(statusCode)
-    .cookie("cookieToken", token, options)
+    .cookie("token", token, options)
     .json({ status: "success", token });
 };

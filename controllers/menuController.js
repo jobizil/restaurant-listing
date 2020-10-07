@@ -66,7 +66,8 @@ exports.getAllMenu = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page, 10) || 1;
   const index = (page - 1) * limit;
   const lastPage = page * limit;
-  const totalDocuments = await Menu.countDocuments();
+  const totalDocuments = await Menu.countDocuments(); //Modified
+  // const totalDocuments = await Menu.countDocuments(JSON.parse(queryStr)); //Modified
 
   query = query.skip(index).limit(limit);
 

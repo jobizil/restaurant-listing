@@ -10,6 +10,7 @@ const AuthSchema = new Schema({
     unique: true,
     required: [true, "Username cannot be blank."],
     trim: true,
+    lowercase: true,
   },
   email: {
     type: String,
@@ -36,6 +37,7 @@ const AuthSchema = new Schema({
 });
 
 // Sign JWT and return
+
 AuthSchema.methods.signToken = function () {
   const auth = this;
   return jwt.sign(
@@ -50,20 +52,18 @@ AuthSchema.methods.signToken = function () {
 // Encrypt Password before writing to db
 AuthSchema.pre("save", async function (next) {
   const auth = this;
-  if (auth.isModified("password")) {
-    next();
-  }
+  // if (auth.isModified("password")) next();
   // Generate hash using salt
   const hash = await bcrypt.genSalt(10);
   auth.password = await bcrypt.hash(auth.password, hash);
-
   next();
+  console.log(hash);
 });
 
 // Match password for loginAdmin
 AuthSchema.methods.matchPassword = async function (passwordFromUser) {
-  const auth = this;
-  return await bcrypt.compare(passwordFromUser, auth.password);
+  const user = this;
+  return await bcrypt.compare(passwordFromUser, user.password);
 };
 
-module.exports = mongoose.model("Auth", AuthSchema);
+module.exports = mongoose.model("User", AuthSchema);

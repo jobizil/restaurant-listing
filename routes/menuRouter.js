@@ -1,4 +1,5 @@
 const express = require("express");
+const { restrict } = require("../middleware/authProcess");
 
 const {
   createMenu,
@@ -8,16 +9,26 @@ const {
   deleteMenu,
   uploadMenuPhoto,
 } = require("../controllers/menuController");
+
 const router = express.Router({
   mergeParams: true,
 });
 
-const { multerUpload } = require('../config/multerConfig')
+const { multerUpload } = require("../config/multerConfig");
 
-router.route("/").post(createMenu).get(getAllMenu);
+router.route("/").post(restrict, createMenu).get(getAllMenu);
 
-router.route("/:id").get(getMenu).put(updateMenu).delete(deleteMenu);
+router
+  .route("/:id")
+  .get(getMenu)
+  .put(restrict, updateMenu)
+  .delete(restrict, deleteMenu);
 
-router.post("/:id/upload", multerUpload.array('photos', 4), uploadMenuPhoto);
+router.post(
+  "/:id/upload",
+  restrict,
+  multerUpload.array("photos", 4),
+  uploadMenuPhoto
+);
 
 module.exports = router;

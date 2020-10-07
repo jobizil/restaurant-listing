@@ -1,4 +1,4 @@
-const Auth = require("../models/authModel");
+const User = require("../models/authModel");
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/asyncHandler");
 const Restaurant = require("../models/restaurantModel");
@@ -11,16 +11,14 @@ const { tokenResponse } = require("../utils/signToken");
 
 exports.registerAdmin = asyncHandler(async (req, res, next) => {
   const { username, email, password, phoneNumber } = req.body;
-
-  const authUser = await Auth.create({
+  const createProfile = await User.create({
     username,
     email,
     password,
     phoneNumber,
   });
-
   // Sends JWT Token and Cookie
-  tokenResponse(authUser, 200, res);
+  tokenResponse(createProfile, 200, res);
 });
 
 // @desc    Admin Login
@@ -29,27 +27,40 @@ exports.registerAdmin = asyncHandler(async (req, res, next) => {
 
 exports.loginAdmin = asyncHandler(async (req, res, next) => {
   const { username, password } = req.body;
-
   // Validate username and password
-  if (!username && !password) {
+  if (!username || !password) {
     return next(
-      new ErrorResponse(", Please provide a username and a password.", 400)
+      new ErrorResponse("Please provide a username and password", 400)
+    );
+  }
+  // Validate username
+  const user = await User.findOne({ username }).select("+password");
+
+  if (!user) {
+    return next(
+      new ErrorResponse("Please provide a valid username and password", 401)
     );
   }
 
-  // Check for user in db
-  const authUser = await Auth.findOne({ username }).select("+password");
-
-  // Validate authUser's username
-  if (!authUser) {
-    return next(new ErrorResponse("Invalid username or password", 401));
-  }
-  // Match authuser's password using bcrypt compare in the auth model methods
-  const matchPassword = await authUser.matchPassword(password);
+  // Validate Password
+  const matchPassword = await user.matchPassword(password);
   if (!matchPassword) {
-    return next(new ErrorResponse("Invalid username or password", 401));
+    return next(
+      new ErrorResponse("Please provide a valid username and password", 401)
+    );
   }
+  console.log(matchPassword);
 
   // Sends JWT Token and Cookie
-  tokenResponse(authUser, 200, res);
+  tokenResponse(user, 200, res);
+});
+
+// @desc    User Profile
+// @route   GET /api/v1/auth/profile
+// @access  Private
+
+exports.adminProfile = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id); //This gets current logged in user's complete details
+
+  res.status(200).json({ status: "success", data: user });
 });
