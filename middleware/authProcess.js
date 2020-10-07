@@ -19,12 +19,9 @@ exports.restrict = asyncHandler(async (req, res, next) => {
       new ErrorResponse(`You do not have access to this route.`, 401)
     );
   }
-
-  // Verify if token exists
+  // Validate token
   try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-
-    console.log(decodedToken);
     req.user = await User.findById(decodedToken.id); //Always identifies current logged in User. Used for all private routes
     next();
   } catch (error) {
@@ -33,3 +30,18 @@ exports.restrict = asyncHandler(async (req, res, next) => {
     );
   }
 });
+
+// Grant access specific roles
+exports.authorizeRole = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.roles)) {
+      return next(
+        new ErrorResponse(
+          `User with role '${req.user.roles}' is not authorized access this route.`,
+          403
+        )
+      );
+    }
+    next();
+  };
+};

@@ -1,6 +1,6 @@
 const express = require("express");
 const { multerUpload } = require("../config/multerConfig");
-const { restrict } = require("../middleware/authProcess");
+const { restrict, authorizeRole } = require("../middleware/authProcess");
 
 const {
   createRestaurant,
@@ -18,17 +18,21 @@ const router = express.Router();
 // Connect to external routers to access its entity
 router.use("/:restaurantId/menu", menu);
 
-router.route("/").post(restrict, createRestaurant).get(getRestaurants);
+router
+  .route("/")
+  .post(restrict, authorizeRole("superAdmin", "admin"), createRestaurant)
+  .get(getRestaurants);
 
 router
   .route("/:id")
   .get(getRestaurant)
-  .put(restrict, updateRestaurant)
-  .delete(restrict, deleteRestaurant);
+  .put(restrict, authorizeRole("superAdmin", "admin"), updateRestaurant)
+  .delete(restrict, authorizeRole("superAdmin"), deleteRestaurant);
 
 router.post(
   "/:id/photo",
   restrict,
+  authorizeRole("superAdmin", "admin"),
   multerUpload.single("image"),
   uploadRestaurantPhoto
 );

@@ -1,5 +1,5 @@
 const express = require("express");
-const { restrict } = require("../middleware/authProcess");
+const { restrict, authorizeRole } = require("../middleware/authProcess");
 
 const {
   createMenu,
@@ -16,17 +16,21 @@ const router = express.Router({
 
 const { multerUpload } = require("../config/multerConfig");
 
-router.route("/").post(restrict, createMenu).get(getAllMenu);
+router
+  .route("/")
+  .post(restrict, authorizeRole("superAdmin", "admin"), createMenu)
+  .get(getAllMenu);
 
 router
   .route("/:id")
   .get(getMenu)
-  .put(restrict, updateMenu)
-  .delete(restrict, deleteMenu);
+  .put(restrict, authorizeRole("superAdmin", "admin"), updateMenu)
+  .delete(restrict, authorizeRole("superAdmin"), deleteMenu);
 
 router.post(
   "/:id/upload",
   restrict,
+  authorizeRole("superAdmin", "admin"),
   multerUpload.array("photos", 4),
   uploadMenuPhoto
 );

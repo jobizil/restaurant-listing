@@ -28,6 +28,11 @@ const AuthSchema = new Schema({
     minlength: [6, "Password should contain a minimum of 6 characters."],
     select: false,
   },
+  roles: {
+    type: String,
+    enum: ["admin", "user", "restaurantOwner", "superAdmin"],
+    default: "admin",
+  },
   phoneNumber: {
     type: Number,
     trim: true,
