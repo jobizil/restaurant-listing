@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 
 dotenv.config({
   path: "./config/config.env",
@@ -9,7 +10,8 @@ dotenv.config({
 const connectDB = require("./config/dbConfig");
 const restaurant = require("./routes/restaurantRouter");
 const menu = require("./routes/menuRouter");
-// const upload = require("./routes/imageRouter");
+const auth = require("./routes/authRouter");
+
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
@@ -27,6 +29,7 @@ connectDB();
 // Load Routers
 app.use(`/api/${API_VERSION}/restaurant`, restaurant);
 app.use(`/api/${API_VERSION}/menu`, menu);
+app.use(`/api/${API_VERSION}/auth`, auth);
 
 // Page not found error
 app.get("*", (req, res) => {
@@ -37,6 +40,9 @@ app.get("*", (req, res) => {
 
 // Load errroHandler
 app.use(errorHandler);
+
+// Load cookieParser
+app.use(cookieParser);
 
 const SERVER = app.listen(
   PORT,
