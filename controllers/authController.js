@@ -64,3 +64,20 @@ exports.adminProfile = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ status: "success", data: user });
 });
+
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+  // Extract email from user body
+  const user = await User.findOne({ email: req.body.email });
+  // Check for user with the email
+  if (!user) {
+    return next(new ErrorResponse(`No valid user with such email.`, 404));
+  }
+  // Reset Token method is gotten from model methods
+  const passwordToken = user.getResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    status: "success",
+    data: user,
+  });
+});
