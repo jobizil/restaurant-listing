@@ -50,7 +50,7 @@ const SERVER = app.listen(
 );
 
 // HandleUnhandledPromiseRejection from Mongo Connection
-// process.on("unhandledRejection", (error, promise) => {
-//   console.log(`${error.message}`);
-//   SERVER.close(() => process.exit(1));
-// });
+process.on("unhandledRejection", (error, promise) => {
+  console.log(`${error.message}`);
+  SERVER.close(() => process.exit(1));
+});
