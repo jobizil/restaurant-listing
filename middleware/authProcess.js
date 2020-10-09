@@ -5,13 +5,18 @@ const User = (require = require("../models/authModel"));
 
 // ProtectRoutes from unauthorized manipulation
 exports.restrict = asyncHandler(async (req, res, next) => {
-  const headers = req.headers.authorization;
+  // const headers = req.headers.authorization;
   let token;
 
   // Check for authorization headers
-  if (headers && headers.startsWith("Bearer ")) {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
     // Extract token
     token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies.token) {
+    token = req.cookies.token;
   }
   // Verify if token exists
   if (!token) {

@@ -57,6 +57,22 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
   tokenResponse(user, 200, res);
 });
 
+// @desc    Logout
+// @route   GET /api/v1/auth/logout
+// @access  Private
+
+exports.logoutAdmin = asyncHandler(async (req, res, next) => {
+  res.cookie("token", "none", {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    status: "success",
+    message: "You are logged out. We hope to see you soon.",
+  });
+});
+
 // @desc    User Profile
 // @route   GET /api/v1/auth/profile
 // @access  Private
@@ -144,13 +160,3 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   // Sends JWT Token and Cookie
   tokenResponse(user, 200, res);
 });
-
-//
-// // @desc    Update Password
-// // @route   GET /api/v1/auth/updatePassword
-// // @access  Private
-//
-// exports.updatePassword = asyncHandler(async(req, res, next)=>{
-//   const user = await User.findById(req.user.id).select('+password')
-//
-// })
