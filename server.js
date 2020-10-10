@@ -1,6 +1,12 @@
+const path = require("path");
 const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
+const helmet = require("helmet");
+const xss = require("xss-clean");
+const cors = require("cors");
+const mongoSanitize = require("express-mongo-sanitize");
+const hpp = require("hpp");
 
 dotenv.config({
   path: "./config/config.env",
@@ -23,8 +29,33 @@ API_VERSION = process.env.API_VERSION || "v1";
 // Body Parser
 app.use(express.json());
 
+//  Set static folder
+app.use(express.static(path.join(__dirname, "public")));
+
 // Connect to Database
 connectDB();
+
+// Set security headers
+app.use(helmet());
+
+// Prevent XSS attacks
+app.use(xss());
+
+// Prevent param pollution
+app.use(hpp());
+
+// Enable CORS
+app.use(cors());
+
+// Load errroHandler
+app.use(errorHandler);
+
+// Load cookieParser
+app.use(cookieParser());
+
+// Sanitize data before they are stored in the Database
+
+app.use(mongoSanitize());
 
 // Load Routers
 app.use(`/api/${API_VERSION}/restaurant`, restaurant);
@@ -37,12 +68,6 @@ app.get("*", (req, res) => {
     `<h2>404, page not found</h2><h4> Proper documentation <a href = "https://documenter.getpostman.com/view/12204297/TVKJwEWL" target="blank" >here<a/> using postman!</h4>`
   );
 });
-
-// Load errroHandler
-app.use(errorHandler);
-
-// Load cookieParser
-app.use(cookieParser());
 
 const SERVER = app.listen(
   PORT,

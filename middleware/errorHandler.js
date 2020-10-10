@@ -3,9 +3,13 @@ const ErrorResponse = require("../utils/errorResponse");
 const errorHandler = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
+  //
+  // if (error.name === "CastError") {
+  //   const message = `Restaurant with such Id not found.`;
+  //   error = new ErrorResponse(message, 404);
 
   if (error.name === "CastError") {
-    const message = `Restaurant with such Id not found.`;
+    const message = `No such Id found.`;
     error = new ErrorResponse(message, 404);
   }
   // Handles Mongoose bad ObjectId
