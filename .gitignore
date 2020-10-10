@@ -13,13 +13,4 @@ helper
 
 
 
-
-
-// Middleware logger to know req protocol
-const logger = (req, res, next) => {
-  console.info(
-    `${req.method} ${req.protocol}://${req.get("host")}${req.originalUrl}`
-  );
-  next();
-};
-app.use(logger);
+docgen build -i foodBukka.postman_collection.json -o index.html
