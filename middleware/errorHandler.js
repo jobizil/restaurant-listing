@@ -7,7 +7,7 @@ const errorHandler = (err, req, res, next) => {
   if (error.name === "CastError") {
     const message = `Restaurant with such Id not found.`;
     error = new ErrorResponse(message, 404);
-
+  }
 
   // Handles Mongoose bad ObjectId
   if (error.code === 11000) {
