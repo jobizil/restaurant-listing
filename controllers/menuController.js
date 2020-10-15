@@ -172,6 +172,13 @@ exports.uploadMenuPhoto = asyncHandler(async (req, res, next) => {
     return res.status(400).send(`Menu with Id not found.`);
   }
   // Upload images to Coludinary
+  if (menu.imageId) {
+    image_id = menu.imageId;
+    image_id.forEach(async (id) => {
+      await uploader.destroy(id);
+    });
+  }
+
   try {
     await images.forEach(async (image) => {
       const parseImage = dataUri(image).content;
@@ -179,7 +186,7 @@ exports.uploadMenuPhoto = asyncHandler(async (req, res, next) => {
       const result = await uploader.upload(parseImage, {
         folder: "images/menus",
       });
-      console.log(result.secure_url);
+
       await Menu.findOneAndUpdate(
         {
           _id,
@@ -187,10 +194,15 @@ exports.uploadMenuPhoto = asyncHandler(async (req, res, next) => {
         {
           $addToSet: {
             images: result.secure_url,
+            // imageId: result.public_id,
           },
         }
       );
 
+      return res.status(201).send({
+        message: "Images uploaded succesfully",
+        data: result.public_id,
+      });
       return result;
     });
   } catch (error) {
@@ -198,7 +210,4 @@ exports.uploadMenuPhoto = asyncHandler(async (req, res, next) => {
       new ErrorResponse("Oops, an error occured, please try again", 500)
     );
   }
-  return res.status(201).send({
-    message: "Images uploaded succesfully",
-  });
 });

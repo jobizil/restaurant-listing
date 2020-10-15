@@ -16,7 +16,16 @@ const MenuSchema = new Schema({
   },
 
   images: {
-    type: []
+    type: [],
+    default: [
+      "https://res.cloudinary.com/jobizil/image/upload/v1602768183/images/menus/x4cspjvzqn2qk76sjhiw.jpg",
+      "https://res.cloudinary.com/jobizil/image/upload/v1602768183/images/menus/xnurgo60mme1ewupfbin.jpg",
+      "https://res.cloudinary.com/jobizil/image/upload/v1602768184/images/menus/ovni4qwzzxbufpsurlsg.jpg",
+    ],
+  },
+  imageId: {
+    type: [],
+    default: ["klfjlk", "klfjlfk", "klfjlek"],
   },
   restaurant: {
     type: Schema.Types.ObjectId,

@@ -41,12 +41,29 @@ const RestaurantSchema = new Schema(
       trim: true,
       required: [true, "Please input an address."],
     },
+    location: {
+      type: String,
+      trim: true,
+      required: [true, "Please input a location."],
+      default: "Lagos",
+    },
+    phone: {
+      type: String,
+      trim: true,
+      default: "08145290260",
+    },
     averageCost: {
       type: Number,
       default: 700,
     },
     image: {
       type: String,
+      default:
+        "https://res.cloudinary.com/jobizil/image/upload/v1602289542/images/restaurant/rhpnydmmfj8kejlzecq6.jpg",
+    },
+    imageId: {
+      type: String,
+      default: "kleewjlk",
     },
     restaurantType: {
       type: String,
@@ -60,7 +77,7 @@ const RestaurantSchema = new Schema(
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-    timestamps: true,
+    timestamps: false,
   }
 );
 

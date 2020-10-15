@@ -29,12 +29,14 @@ exports.registerAdmin = asyncHandler(async (req, res, next) => {
 
 exports.loginAdmin = asyncHandler(async (req, res, next) => {
   const { username, password } = req.body;
+
   // Validate username and password
   if (!username || !password) {
     return next(
       new ErrorResponse("Please provide a username and password", 400)
     );
   }
+
   // Validate username
   const user = await User.findOne({ username }).select("+password");
 
@@ -51,7 +53,6 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
       new ErrorResponse("Please provide a valid username and password", 401)
     );
   }
-  console.log(matchPassword);
 
   // Sends JWT Token and Cookie
   tokenResponse(user, 200, res);
@@ -62,7 +63,7 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
 // @access  Private
 
 exports.logoutAdmin = asyncHandler(async (req, res, next) => {
-  res.cookie("token", "none", {
+  res.cookie("token", " ", {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
@@ -73,21 +74,13 @@ exports.logoutAdmin = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    User Profile
-// @route   GET /api/v1/auth/profile
-// @access  Private
-
-exports.adminProfile = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user.id); //This gets current logged in user's complete details
-
-  res.status(200).json({ status: "success", data: user });
-});
-
 // @desc    Forgot Password
 // @route   GET /api/v1/auth/forgotPassword
 // @access  Public
+
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
   // Extract email from user body
+
   const user = await User.findOne({ email: req.body.email });
   // Check for user with the email
   if (!user) {
@@ -116,7 +109,6 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
       message: "Reset Token sent",
     });
   } catch (error) {
-    console.error(error);
     // Remove token and expire time from db if error occurs
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
@@ -126,9 +118,11 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   }
 });
 
-// @desc    Reset Password
-// @route   GET /api/v1/auth/resetpassword/:resettoken
-// @access  Public
+/**
+@desc    Reset Password
+@route   GET /api/v1/auth/resetpassword/:resettoken
+@access  Public
+*/
 
 exports.resetPassword = asyncHandler(async (req, res, next) => {
   const resetPasswordToken = crypto
@@ -151,7 +145,9 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
   // Accept new password if token is valid
   user.password = req.body.password;
+
   // Remove token and expire from database.
+
   user.resetPasswordToken = undefined;
   user.resetPasswordExpire = undefined;
 
@@ -160,3 +156,16 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   // Sends JWT Token and Cookie
   tokenResponse(user, 200, res);
 });
+
+/**
+
+@desc    User Profile
+@route   GET /api/v1/auth/profile
+@access  Private
+
+exports.adminProfile = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  res.status(200).json({ status: "success", data: user });
+});
+
+*/

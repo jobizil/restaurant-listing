@@ -142,10 +142,10 @@ exports.deleteRestaurant = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc        Upload photo
-// @routes      PUT /restaurant/:id/photo
-// @access      Private
-
+/** @desc        Upload photo
+    @routes      PUT /restaurant/:id/photo
+    @access      Private
+*/
 exports.uploadRestaurantPhoto = asyncHandler(async (req, res, next) => {
   const _id = req.params.id;
   const image = req.file;
@@ -159,7 +159,9 @@ exports.uploadRestaurantPhoto = asyncHandler(async (req, res, next) => {
   if (!image) {
     return next(new ErrorResponse("Please upload a photo.", 400));
   }
-
+  if (restaurant.imageId) {
+    await uploader.destroy(restaurant.imageId);
+  }
   // Validate Uploaded file if its a photos
   if (!image.mimetype.startsWith("image")) {
     return next(new ErrorResponse("Sorry, only images can be uploaded", 400));
@@ -170,12 +172,16 @@ exports.uploadRestaurantPhoto = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse(`Sorry, file is bigger than 4mb`, 400));
   }
   const parseImage = dataUri(image).content;
+
   try {
     const result = await uploader.upload(parseImage, {
       folder: "images/restaurant",
     });
+
+    // Save to db
     await Restaurant.findByIdAndUpdate(_id, {
       image: result.secure_url,
+      imageId: result.public_id,
     });
     return res.status(201).json({
       message: "Photo uploaded successfully.",

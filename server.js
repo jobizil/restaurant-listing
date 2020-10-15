@@ -47,9 +47,6 @@ app.use(hpp());
 // Enable CORS
 app.use(cors());
 
-// Load errroHandler
-app.use(errorHandler);
-
 // Load cookieParser
 app.use(cookieParser());
 
@@ -62,6 +59,9 @@ app.use(`/api/${API_VERSION}/restaurant`, restaurant);
 app.use(`/api/${API_VERSION}/menu`, menu);
 app.use(`/api/${API_VERSION}/auth`, auth);
 
+// Load errroHandler
+app.use(errorHandler);
+
 // Page not found error
 app.get("*", (req, res) => {
   res.send(
@@ -70,12 +70,12 @@ app.get("*", (req, res) => {
 });
 
 const SERVER = app.listen(
-  PORT,
-  console.log(`Server running on ${process.env.NODE_ENV} mode on port ${PORT}`)
+  PORT
+  // console.log(`Server running on ${process.env.NODE_ENV} mode on port ${PORT}`)
 );
 
 // HandleUnhandledPromiseRejection from Mongo Connection
 process.on("unhandledRejection", (error, promise) => {
-  console.log(`${error.message}`);
+  // console.log(`${error.message}`);
   SERVER.close(() => process.exit(1));
 });

@@ -1,6 +1,4 @@
 const express = require("express");
-const { multerUpload } = require("../config/multerConfig");
-const { restrict, authorizeRole } = require("../middleware/authProcess");
 
 const {
   createRestaurant,
@@ -10,6 +8,8 @@ const {
   deleteRestaurant,
   uploadRestaurantPhoto,
 } = require("../controllers/restaurantController");
+const { multerUpload } = require("../config/multerConfig");
+const { restrict, authorizeRole } = require("../middleware/authProcess");
 // Include other resource Route
 const menu = require("./menuRouter");
 
@@ -20,7 +20,7 @@ router.use("/:restaurantId/menu", menu);
 
 router
   .route("/")
-  .post(restrict, authorizeRole("superAdmin", "admin"), createRestaurant)
+  .post(restrict, authorizeRole("admin"), createRestaurant)
   .get(getRestaurants);
 
 router

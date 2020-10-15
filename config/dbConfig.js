@@ -8,6 +8,6 @@ const connectDB = async () => {
     useFindAndModify: false,
     useCreateIndex: true,
   });
-  console.log(`Mongodb connected to ${connection.connection.host}`);
+  // c.l(`Mongodb connected to ${connection.connection.host}`);
 };
 module.exports = connectDB;

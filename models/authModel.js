@@ -29,9 +29,9 @@ const AuthSchema = new Schema({
     minlength: [6, "Password should contain a minimum of 6 characters."],
     select: false,
   },
-  roles: {
+  role: {
     type: String,
-    enum: ["admin", "user", "restaurantOwner", "superAdmin"],
+    // enum: ["admin", "user", "restaurantOwner", "superAdmin"],
     default: "admin",
   },
   phoneNumber: {
@@ -63,7 +63,6 @@ AuthSchema.pre("save", async function (next) {
   const hash = await bcrypt.genSalt(10);
   auth.password = await bcrypt.hash(auth.password, hash);
   next();
-  console.log(hash);
 });
 
 // Match password for loginAdmin

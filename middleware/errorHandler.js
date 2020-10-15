@@ -5,10 +5,9 @@ const errorHandler = (err, req, res, next) => {
   error.message = err.message;
 
   if (error.name === "CastError") {
-    const message = `Restaurant with such Id not found.`;
+    const message = `Resource not found.`;
     error = new ErrorResponse(message, 404);
   }
-
   // Handles Mongoose bad ObjectId
   if (error.code === 11000) {
     const message = "Oops, duplicate value entered";
