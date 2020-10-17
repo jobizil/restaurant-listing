@@ -74,8 +74,8 @@ const SERVER = app.listen(
   console.log(`Server running on ${process.env.NODE_ENV} mode on port ${PORT}`)
 );
 
-// // HandleUnhandledPromiseRejection from Mongo Connection
-// process.on("unhandledRejection", (error, promise) => {
-//   // console.log(`${error.message}`);
-//   SERVER.close(() => process.exit(1));
-// });
+// HandleUnhandledPromiseRejection from Mongo Connection
+process.on("unhandledRejection", (error, promise) => {
+  // console.log(`${error.message}`);
+  SERVER.close(() => process.exit(1));
+});
