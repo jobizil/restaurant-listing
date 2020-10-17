@@ -64,16 +64,17 @@ exports.getAllMenu = asyncHandler(async (req, res, next) => {
   } else {
     query = query.sort("menuName");
   }
-  const limit = parseInt(req.query.limit, 10) || 5;
-  const page = parseInt(req.query.page, 10) || 1;
-  const index = (page - 1) * limit;
-  const lastPage = page * limit;
+  // const limit = parseInt(req.query.limit, 10) || 5;
+  // const page = parseInt(req.query.page, 10) || 1;
+  // const index = (page - 1) * limit;
+  // const lastPage = page * limit;
   const totalDocuments = await Menu.countDocuments(); //Modified
   // const totalDocuments = await Menu.countDocuments(JSON.parse(queryStr)); //Modified
 
-  query = query.skip(index).limit(limit);
+  // query = query.skip(index).limit(limit);
 
   const menu = await query;
+  /**
   currentPage = {};
 
   if (index > 0)
@@ -84,9 +85,9 @@ exports.getAllMenu = asyncHandler(async (req, res, next) => {
     currentPage.next = {
       Page: page + 1,
     };
-
+*/
   res.status(200).json({
-    "Found on this page": `${menu.length} of ${limit}`,
+    // "Found on this page": `${menu.length} of ${limit}`,
     // Pages: currentPage,
     "Total Menu": totalDocuments,
     Result: menu,
