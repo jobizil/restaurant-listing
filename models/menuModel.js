@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
-const slugify = require("slugify");
+// const slugify = require("slugify");
 const Schema = mongoose.Schema;
 const MenuSchema = new Schema({
-  menuName: {
+  menuname: {
     type: String,
     required: true,
     trim: true,
   },
-  slug: String,
+ 
   description: {
     type: String,
     trim: true,
@@ -27,18 +27,11 @@ const MenuSchema = new Schema({
     type: [],
     default: ["klfjlk", "klfjlfk", "klfjlek"],
   },
-  restaurant: {
-    type: Schema.Types.ObjectId,
-    ref: "Restaurant",
-  },
+  // restaurant: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: "Restaurant",
+  // },
 });
 
-// Convert name to slug for front end consumption
-MenuSchema.pre("save", function (next) {
-  this.slug = slugify(this.menuName, {
-    lower: true,
-  });
-  next();
-});
 
 module.exports = mongoose.model("Menu", MenuSchema);

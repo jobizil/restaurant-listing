@@ -5,7 +5,7 @@ const Menu = require("./menuModel");
 const Schema = mongoose.Schema;
 const RestaurantSchema = new Schema(
   {
-    businessName: {
+    businessname: {
       type: String,
       required: [true, "Please input a restaurant name."],
       lowercase: true,
@@ -52,7 +52,7 @@ const RestaurantSchema = new Schema(
       trim: true,
       default: "08145290260",
     },
-    averageCost: {
+    averagecost: {
       type: Number,
       default: 700,
     },
@@ -65,21 +65,27 @@ const RestaurantSchema = new Schema(
       type: String,
       default: "kleewjlk",
     },
-    restaurantType: {
+    restauranttype: {
       type: String,
       lowercase: true,
       enum: ["eatery", "bukka", "canteen"],
       default: "canteen",
     },
+      menu: {
+        type: Schema.Types.ObjectId,
+        ref: "Menu",
+      },
     slug: String,
     direction: String,
   },
+
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
     timestamps: false,
   }
 );
+
 
 // Populate with virtuals
 RestaurantSchema.virtual("foodMenu", {
@@ -91,7 +97,7 @@ RestaurantSchema.virtual("foodMenu", {
 
 // Convert name to slug for frontend consumption
 RestaurantSchema.pre("save", function (next) {
-  this.slug = slugify(this.businessName, {
+  this.slug = slugify(this.businessname, {
     lower: true,
   });
   next();

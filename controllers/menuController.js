@@ -54,7 +54,7 @@ exports.getAllMenu = asyncHandler(async (req, res, next) => {
       restaurant: _restaurantId,
     });
   } else {
-    query = Menu.find(JSON.parse(queryStr)).populate("restaurant");
+    query = Menu.find(JSON.parse(queryStr)).populate("restaurant").select('-imageId');
   }
   if (req.query.sort) {
     const sortBy = req.query.sort.split(",").join(" ");
@@ -102,7 +102,7 @@ exports.getMenu = asyncHandler(async (req, res, next) => {
   const menu = await Menu.findById(_id).populate({
     path: "restaurant",
     select: "businessName restaurantType address",
-  });
+  }).select('-imageId');
   if (!menu) {
     return next(new ErrorResponse(`No menu with Id ${_id} found`, 404));
   }
@@ -210,4 +210,37 @@ exports.uploadMenuPhoto = asyncHandler(async (req, res, next) => {
       new ErrorResponse("Oops, an error occured, please try again", 500)
     );
   }
+});
+
+// @desc        Searc
+// @routes      PUT /menu/:id/uploads
+// @access      Private
+
+exports.search = asyncHandler(async (req, res, next) => {
+  // let query;
+  const restaurant = await Restaurant.find({})
+  const q = req.query.q
+    ? {
+        $or: [
+          {
+            menuname: {
+              $regex: req.query.q,
+              $options: "i",
+            },
+          }, {
+            'restaurant[0].location': {
+              $regex: req.query.q,
+              $options: "i",
+            },
+          },
+        ],
+      }
+    : {};
+
+  const result = await Menu.find({
+    ...q
+  }).select('-imageId')
+  console.log(restaurant[0].location)
+  res.json(result);
+
 });
