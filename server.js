@@ -2,7 +2,6 @@ const path = require("path");
 const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
-const helmet = require("helmet");
 const xss = require("xss-clean");
 const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");
@@ -34,9 +33,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Connect to Database
 connectDB();
-
-// Set security headers
-app.use(helmet());
 
 // Prevent XSS attacks
 app.use(xss());
@@ -70,8 +66,8 @@ app.get("*", (req, res) => {
 });
 
 const SERVER = app.listen(
-  PORT
-  // console.log(`Server running on ${process.env.NODE_ENV} mode on port ${PORT}`)
+  PORT,
+  console.log(`Server running on ${process.env.NODE_ENV} mode on port ${PORT}`)
 );
 
 // HandleUnhandledPromiseRejection from Mongo Connection

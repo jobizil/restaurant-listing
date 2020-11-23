@@ -60,29 +60,29 @@ exports.getRestaurants = asyncHandler(async (req, res, next) => {
   } else {
     query = query.sort("-reviews");
   }
-  const limit = parseInt(req.query.limit, 10) || 10;
-  const page = parseInt(req.query.page, 10) || 1;
-  const indexPage = (page - 1) * limit;
-  const lastPage = page * limit;
+  // const limit = parseInt(req.query.limit, 10) || 10;
+  // const page = parseInt(req.query.page, 10) || 1;
+  // const indexPage = (page - 1) * limit;
+  // const lastPage = page * limit;
   const totalDocuments = await Restaurant.countDocuments();
-  query = query.skip(indexPage).limit(limit);
+  // query = query.skip(indexPage).limit(limit);
 
   const restaurant = await query;
 
   // Validate current page number
-  currentPage = {};
-  if (indexPage > 0)
-    currentPage.prev = {
-      page: page - 1,
-    };
-  if (lastPage < totalDocuments)
-    currentPage.next = {
-      page: page + 1,
-    };
+  // currentPage = {};
+  // if (indexPage > 0)
+  //   currentPage.prev = {
+  //     page: page - 1,
+  //   };
+  // if (lastPage < totalDocuments)
+  //   currentPage.next = {
+  //     page: page + 1,
+  //   };
 
   res.json({
-    "Found on this page": `${restaurant.length} of ${limit}`,
-    currentPage,
+    // "Found on this page": `${restaurant.length} of ${limit}`,
+    // currentPage,
     "Total Restaurants": totalDocuments,
     Result: restaurant,
   });

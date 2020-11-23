@@ -2,7 +2,7 @@
   "name": "resturant-listing",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "nodemon server.js"
   },
@@ -16,10 +16,8 @@
     "cors": "^2.8.5",
     "datauri": "^3.0.0",
     "dotenv": "^8.2.0",
-    "escape-string-regexp": "^4.0.0",
     "express": "^4.17.1",
     "express-mongo-sanitize": "^2.0.0",
-    "helmet": "^4.1.1",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.4",
